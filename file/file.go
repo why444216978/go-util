@@ -5,26 +5,25 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
+	"syscall"
 
 	util_err "github.com/why444216978/go-util/error"
 )
 
 //使用io.WriteString()函数进行数据的写入，不存在则创建
 func WriteWithIo(filePath, content string) error {
-	fileObj, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
-	if err != nil {
-		fmt.Println("Failed to open the file", err.Error())
-		return err
-	}
+	file := OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	defer file.Close()
 
 	if content != "" {
-		if _, err := io.WriteString(fileObj, content); err == nil {
-			fmt.Println("Successful appending to the file with os.OpenFile and io.WriteString.", content)
-			return nil
+		_, err := io.WriteString(file, content)
+		if err != nil{
+			return err
 		}
-		return err
+		fmt.Println("Successful appending to the file with os.OpenFile and io.WriteString.", content)
 	}
 
 	return nil
@@ -45,7 +44,7 @@ func ReadLimit(str string, len int64) string {
 }
 
 //读取整个文件
-func ReadFile(dir string) string{
+func ReadFile(dir string) string {
 	data, err := ioutil.ReadFile(dir)
 	if err != nil {
 		panic(err)
@@ -89,4 +88,73 @@ func ReadJsonFile(dir string) string {
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	return string(byteValue)
+}
+
+//获得文件Info
+func GetFileInfo(file *os.File) os.FileInfo {
+	fileInfo, err := file.Stat()
+	if err != nil {
+		log.Fatal("file stat error:", err)
+	}
+	return fileInfo
+}
+
+//获得文件权限Mode
+func GetFileMode(file *os.File) os.FileMode {
+	fileInfo := GetFileInfo(file)
+	return fileInfo.Mode()
+}
+
+//获得文件Stat
+func GetFileStat(file *os.File) *syscall.Stat_t{
+	fileInfo := GetFileInfo(file)
+	sysInterface := fileInfo.Sys()
+	sys := sysInterface.(*syscall.Stat_t)
+	//fmt.Println(sys.Atimespec)
+	return sys
+}
+
+func Chown(file *os.File, uid, gid int){
+	if uid == 0{
+		uid = os.Getuid()
+	}
+	if gid == 0 {
+		gid = os.Getgid()
+	}
+
+	err := file.Chown(uid, gid)
+	if err != nil{
+		panic(err)
+	}
+}
+
+func Chmod(file *os.File, mode int){
+	err := file.Chmod(os.FileMode(mode))
+	if err != nil{
+		panic(err)
+	}
+}
+
+func Open(dir string) *os.File{
+	file, err := os.Open(dir)
+	if err != nil {
+		panic(err)
+	}
+	return file
+}
+
+func Create(dir string) *os.File{
+	file, err := os.Create(dir)
+	if err != nil {
+		panic(err)
+	}
+	return file
+}
+
+func OpenFile(name string, flag int, perm os.FileMode) *os.File {
+	file, err := os.OpenFile(name, flag, perm)
+	if err != nil{
+		panic(err)
+	}
+	return file
 }
