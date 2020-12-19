@@ -7,8 +7,121 @@ import (
 	"time"
 )
 
-//DateFormat(time.Now(), "YYYY-MM-DD HH:mm:ss")
-func DateFormat(t time.Time, format string) string {
+//等同于PHP的date函数
+//Date("Y-m-d H:i:s", time.Now())
+func Date(format string, ts ...time.Time) string {
+	patterns := []string{
+		// 年
+		"Y", "2006", // 4 位数字完整表示的年份
+		"y", "06", // 2 位数字表示的年份
+
+		// 月
+		"m", "01", // 数字表示的月份，有前导零
+		"n", "1", // 数字表示的月份，没有前导零
+		"M", "Jan", // 三个字母缩写表示的月份
+		"F", "January", // 月份，完整的文本格式，例如 January 或者 March
+
+		// 日
+		"d", "02", // 月份中的第几天，有前导零的 2 位数字
+		"j", "2", // 月份中的第几天，没有前导零
+
+		"D", "Mon", // 星期几，文本表示，3 个字母
+		"l", "Monday", // 星期几，完整的文本格式;L的小写字母
+
+		// 时间
+		"g", "3", // 小时，12 小时格式，没有前导零
+		"G", "15", // 小时，24 小时格式，没有前导零
+		"h", "03", // 小时，12 小时格式，有前导零
+		"H", "15", // 小时，24 小时格式，有前导零
+
+		"a", "pm", // 小写的上午和下午值
+		"A", "PM", // 小写的上午和下午值
+
+		"i", "04", // 有前导零的分钟数
+		"s", "05", // 秒数，有前导零
+	}
+	replacer := strings.NewReplacer(patterns...)
+	format = replacer.Replace(format)
+
+	t := time.Now()
+	if len(ts) > 0 {
+		t = ts[0]
+	}
+	return t.Format(format)
+}
+
+//等同于PHP的strtotime函数
+//StrToTime("2020-12-19 14:16:22")
+func StrToTime(value string) time.Time {
+	if value == "" {
+		return time.Time{}
+	}
+	layouts := []string{
+		"2006-01-02 15:04:05 -0700 MST",
+		"2006-01-02 15:04:05 -0700",
+		"2006-01-02 15:04:05",
+		"2006/01/02 15:04:05 -0700 MST",
+		"2006/01/02 15:04:05 -0700",
+		"2006/01/02 15:04:05",
+		"2006-01-02 -0700 MST",
+		"2006-01-02 -0700",
+		"2006-01-02",
+		"2006/01/02 -0700 MST",
+		"2006/01/02 -0700",
+		"2006/01/02",
+		"2006-01-02 15:04:05 -0700 -0700",
+		"2006/01/02 15:04:05 -0700 -0700",
+		"2006-01-02 -0700 -0700",
+		"2006/01/02 -0700 -0700",
+		time.ANSIC,
+		time.UnixDate,
+		time.RubyDate,
+		time.RFC822,
+		time.RFC822Z,
+		time.RFC850,
+		time.RFC1123,
+		time.RFC1123Z,
+		time.RFC3339,
+		time.RFC3339Nano,
+		time.Kitchen,
+		time.Stamp,
+		time.StampMilli,
+		time.StampMicro,
+		time.StampNano,
+	}
+
+	var t time.Time
+	var err error
+	for _, layout := range layouts {
+		t, err = time.Parse(layout, value)
+		if err == nil {
+			return t
+		}
+	}
+	panic(err)
+}
+
+func StrToLocalTime(value string) time.Time {
+	if value == "" {
+		return time.Time{}
+	}
+	zoneName, offset := time.Now().Zone()
+
+	zoneValue := offset / 3600 * 100
+	if zoneValue > 0 {
+		value += fmt.Sprintf(" +%04d", zoneValue)
+	} else {
+		value += fmt.Sprintf(" -%04d", zoneValue)
+	}
+
+	if zoneName != "" {
+		value += " " + zoneName
+	}
+	return StrToTime(value)
+}
+
+//DateFormat("YYYY-MM-DD HH:mm:ss", time.Now())
+func DateFormat(format string, t time.Time) string {
 	res := strings.Replace(format, "MM", t.Format("01"), -1)
 	res = strings.Replace(res, "M", t.Format("1"), -1)
 	res = strings.Replace(res, "DD", t.Format("02"), -1)
@@ -26,21 +139,24 @@ func DateFormat(t time.Time, format string) string {
 	return res
 }
 
-//获得某一天0点的时间戳
-func GetDaysAgoZeroTime(day int) int64 {
+//以当天0点为基准，获取前后某天0点时间
+//昨天：GetDaysAgoZeroTime(-1)
+//今天：GetDaysAgoZeroTime(0)
+//明天：GetDaysAgoZeroTime(1)
+func GetDaysAgoZeroTime(day int) time.Time {
 	date := time.Now().AddDate(0, 0, day).Format("2006-01-02")
-	t, _ := time.Parse("2006-01-02", date)
-	return t.Unix()
+	t, _ := time.ParseInLocation("2006-01-02", date, time.Local)
+	return t
 }
 
-//时间戳转人可读
-func TimeToHuman(target int) string {
+//根据时间戳获得人类可读时间
+func TimeToHuman(ts int) string {
 	var res = ""
-	if target == 0 {
+	if ts == 0 {
 		return res
 	}
 
-	t := int(time.Now().Unix()) - target
+	t := int(time.Now().Unix()) - ts
 	data := [7]map[string]interface{}{
 		{"key": 31536000, "value": "年"},
 		{"key": 2592000, "value": "个月"},
@@ -53,7 +169,13 @@ func TimeToHuman(target int) string {
 	for _, v := range data {
 		var c = t / v["key"].(int)
 		if 0 != c {
-			res = strconv.Itoa(c) + v["value"].(string) + "前"
+			fmt.Println(c)
+			suffix := "前"
+			if c < 0 {
+				suffix = "后"
+				c = -c
+			}
+			res = strconv.Itoa(c) + v["value"].(string) + suffix
 			break
 		}
 	}
@@ -79,4 +201,48 @@ func GetCurrentMilliUnix() int64 {
 // 获取当前的时间 - 纳秒级时间戳
 func GetCurrentNanoUnix() int64 {
 	return time.Now().UnixNano()
+}
+
+//小时向下取整
+func TruncateHour(t time.Time) time.Time {
+	return t.Truncate(1 * time.Hour)
+}
+
+//小时向上取整
+func RoundHour(t time.Time) time.Time {
+	return t.Round(1 * time.Hour)
+}
+
+//分钟向下取证
+func TruncateMinute(t time.Time) time.Time {
+	return t.Truncate(1 * time.Minute)
+}
+
+//分钟向上取整
+func RoundMinute(t time.Time) time.Time {
+	return t.Round(1 * time.Minute)
+}
+
+//string小时向下取证
+func TruncateHourStr(str string) time.Time {
+	t := StrToTime(str)
+	return t.Truncate(1 * time.Hour)
+}
+
+//string小时向上取整
+func RoundHourStr(str string) time.Time {
+	t := StrToTime(str)
+	return t.Round(1 * time.Hour)
+}
+
+//string分钟向上取整
+func TruncateMinuteStr(str string) time.Time {
+	t := StrToTime(str)
+	return t.Truncate(1 * time.Minute)
+}
+
+//string分钟向上取整
+func RoundMinuteStr(str string) time.Time {
+	t := StrToTime(str)
+	return t.Round(1 * time.Minute)
 }
