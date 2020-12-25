@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -78,13 +79,42 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	return data
 }
 
-/*func StructToByte(tmp struct{}){
-	tmp := &Test{Name: "why", Age: 34, Id: 1}
-	length := unsafe.Sizeof(tmp)
-	data := &SliceMock{
-		addr: uintptr(unsafe.Pointer(tmp)),
-		cap : int(length),
-		len : int(length),
+//结构体转json
+func StructToJson(v interface{}) (string, error) {
+	jsons, err := json.Marshal(v)
+	if err != nil {
+		return "", err
 	}
-	ret := *(*[]byte)(unsafe.Pointer(data))
-}*/
+	return string(jsons), nil
+}
+
+//通过反射结构体转json
+func StructToMapByReflect(v interface{}) string {
+	userValue := reflect.ValueOf(v)
+	userType := reflect.TypeOf(v)
+
+	jsonBuilder := strings.Builder{}
+	jsonBuilder.WriteString("{")
+
+	num := userType.NumField()
+
+	for i := 0; i < num; i++ {
+		jsonTag := userType.Field(i).Tag.Get("json")
+
+		jsonBuilder.WriteString("\"" + jsonTag + "\"")
+		jsonBuilder.WriteString(":")
+		jsonBuilder.WriteString(fmt.Sprintf("\"%v\"", userValue.Field(i)))
+		if i < num-1 {
+			jsonBuilder.WriteString(",")
+		}
+	}
+	jsonBuilder.WriteString("}")
+
+	return jsonBuilder.String()
+}
+
+//json转struct
+//jsonStr := `{"name":"why","age":18}`
+//user := User{}
+//json.Unmarshal([]byte(jsonStr), &user)
+//fmt.Println(user)
