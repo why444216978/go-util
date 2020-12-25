@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"unsafe"
 
 	util_err "github.com/why444216978/go-util/error"
 )
@@ -111,6 +112,24 @@ func StructToMapByReflect(v interface{}) string {
 	jsonBuilder.WriteString("}")
 
 	return jsonBuilder.String()
+}
+
+//自定义string转byte
+//解决强转效率低：先分配一个内存再复制内容
+//StringToByte("str"
+func StringToByte(str string) []byte{
+	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&str))
+	sliceHeader.Cap = sliceHeader.Len
+	b := *(*[]byte)(unsafe.Pointer(sliceHeader))
+	return b
+}
+
+//自定义byte转string
+//解决强转效率低：先分配一个内存再复制内容
+//ByteToString([]byte("why"))
+func ByteToString(b []byte) string{
+	ptr := (*string)(unsafe.Pointer(&b))
+	return *ptr
 }
 
 //json转struct
