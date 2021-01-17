@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-//等同于PHP的date函数
-//Date("Y-m-d H:i:s", time.Now())
+// Date 等同于PHP的date函数
+// Date("Y-m-d H:i:s", time.Now())
 func Date(format string, ts ...time.Time) string {
 	patterns := []string{
 		// 年
@@ -50,8 +50,8 @@ func Date(format string, ts ...time.Time) string {
 	return t.Format(format)
 }
 
-//等同于PHP的strtotime函数
-//StrToTime("2020-12-19 14:16:22")
+// StrToTime 等同于PHP的strtotime函数
+// StrToTime("2020-12-19 14:16:22")
 func StrToTime(value string) time.Time {
 	if value == "" {
 		return time.Time{}
@@ -101,6 +101,7 @@ func StrToTime(value string) time.Time {
 	panic(err)
 }
 
+// StrToLocalTime 字符串转本地时间
 func StrToLocalTime(value string) time.Time {
 	if value == "" {
 		return time.Time{}
@@ -120,7 +121,8 @@ func StrToLocalTime(value string) time.Time {
 	return StrToTime(value)
 }
 
-//DateFormat("YYYY-MM-DD HH:mm:ss", time.Now())
+// DateFormat 格式化time.Time
+// DateFormat("YYYY-MM-DD HH:mm:ss", time.Now())
 func DateFormat(format string, t time.Time) string {
 	res := strings.Replace(format, "MM", t.Format("01"), -1)
 	res = strings.Replace(res, "M", t.Format("1"), -1)
@@ -139,17 +141,17 @@ func DateFormat(format string, t time.Time) string {
 	return res
 }
 
-//以当天0点为基准，获取前后某天0点时间
-//昨天：GetDaysAgoZeroTime(-1)
-//今天：GetDaysAgoZeroTime(0)
-//明天：GetDaysAgoZeroTime(1)
+// GetDaysAgoZeroTime 以当天0点为基准，获取前后某天0点时间
+// 昨天：GetDaysAgoZeroTime(-1)
+// 今天：GetDaysAgoZeroTime(0)
+// 明天：GetDaysAgoZeroTime(1)
 func GetDaysAgoZeroTime(day int) time.Time {
 	date := time.Now().AddDate(0, 0, day).Format("2006-01-02")
 	t, _ := time.ParseInLocation("2006-01-02", date, time.Local)
 	return t
 }
 
-//根据时间戳获得人类可读时间
+// TimeToHuman 根据时间戳获得人类可读时间
 func TimeToHuman(ts int) string {
 	var res = ""
 	if ts == 0 {
@@ -183,65 +185,65 @@ func TimeToHuman(ts int) string {
 	return res
 }
 
-// 获取当前的时间 - 字符串
+// GetCurrentDate 获取当前的时间 - 字符串
 func GetCurrentDate() string {
 	return time.Now().Format("2006/01/02 15:04:05")
 }
 
-// 获取当前的时间 - Unix时间戳
+// GetCurrentUnix 获取当前的时间 - Unix时间戳
 func GetCurrentUnix() int64 {
 	return time.Now().Unix()
 }
 
-// 获取当前的时间 - 毫秒级时间戳
+// GetCurrentMilliUnix 获取当前的时间 - 毫秒级时间戳
 func GetCurrentMilliUnix() int64 {
 	return time.Now().UnixNano() / 1000000
 }
 
-// 获取当前的时间 - 纳秒级时间戳
+// GetCurrentNanoUnix 获取当前的时间 - 纳秒级时间戳
 func GetCurrentNanoUnix() int64 {
 	return time.Now().UnixNano()
 }
 
-//小时向下取整
+// TruncateHour 小时向下取整
 func TruncateHour(t time.Time) time.Time {
 	return t.Truncate(1 * time.Hour)
 }
 
-//小时向上取整
+// RoundHour 小时向上取整
 func RoundHour(t time.Time) time.Time {
 	return t.Round(1 * time.Hour)
 }
 
-//分钟向下取证
+// TruncateMinute 分钟向下取证
 func TruncateMinute(t time.Time) time.Time {
 	return t.Truncate(1 * time.Minute)
 }
 
-//分钟向上取整
+// RoundMinute 分钟向上取整
 func RoundMinute(t time.Time) time.Time {
 	return t.Round(1 * time.Minute)
 }
 
-//string小时向下取证
+// TruncateHourStr string小时向下取证
 func TruncateHourStr(str string) time.Time {
 	t := StrToTime(str)
 	return t.Truncate(1 * time.Hour)
 }
 
-//string小时向上取整
+// RoundHourStr string小时向上取整
 func RoundHourStr(str string) time.Time {
 	t := StrToTime(str)
 	return t.Round(1 * time.Hour)
 }
 
-//string分钟向上取整
+// TruncateMinuteStr string分钟向下取整
 func TruncateMinuteStr(str string) time.Time {
 	t := StrToTime(str)
 	return t.Truncate(1 * time.Minute)
 }
 
-//string分钟向上取整
+// RoundMinuteStr string分钟向上取整
 func RoundMinuteStr(str string) time.Time {
 	t := StrToTime(str)
 	return t.Round(1 * time.Minute)

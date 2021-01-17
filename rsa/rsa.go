@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-// 公钥加密
+// PublicEncrypt 公钥加密
 func PublicEncrypt(encryptStr string, path string) (string, error) {
 	// 打开文件
 	file, err := os.Open(path)
@@ -45,7 +45,7 @@ func PublicEncrypt(encryptStr string, path string) (string, error) {
 	return base64.URLEncoding.EncodeToString(encryptedStr), nil
 }
 
-// 私钥解密
+// PrivateDecrypt 私钥解密
 func PrivateDecrypt(decryptStr string, path string) (string, error) {
 	// 打开文件
 	file, err := os.Open(path)

@@ -7,7 +7,7 @@ import (
 	"encoding/base64"
 )
 
-// 加密 aes_128_cbc
+//  Encrypt 加密 aes_128_cbc
 func Encrypt(encryptStr string, key []byte, iv string) (string, error) {
 	encryptBytes := []byte(encryptStr)
 	block, err := aes.NewCipher(key)
@@ -24,7 +24,7 @@ func Encrypt(encryptStr string, key []byte, iv string) (string, error) {
 	return base64.URLEncoding.EncodeToString(encrypted), nil
 }
 
-// 解密
+// Decrypt 解密
 func Decrypt(decryptStr string, key []byte, iv string) (string, error) {
 	decryptBytes, err := base64.URLEncoding.DecodeString(decryptStr)
 	if err != nil {

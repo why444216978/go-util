@@ -12,13 +12,13 @@ import (
 	util_err "github.com/why444216978/go-util/error"
 )
 
-//深拷贝转换
-//type User struct {
-//	A string
-//}
-//user1 := &User{A:"a"}
-//user2 := new(User)
-//conversion.DeepCopy(user2, user1)
+// DeepCopy 深拷贝转换
+// type User struct {
+// 	A string
+// }
+// user1 := &User{A:"a"}
+// user2 := new(User)
+// conversion.DeepCopy(user2, user1)
 func DeepCopy(dst, src interface{}) error {
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(src); err != nil {
@@ -27,25 +27,28 @@ func DeepCopy(dst, src interface{}) error {
 	return gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)
 }
 
+// JsonEncode interface转json
 func JsonEncode(v interface{}) string {
 	b, err := json.Marshal(v)
 	util_err.Must(err)
 	return string(b)
 }
 
+// MapToJsonInt 索引为int的map转json
 func MapToJsonInt(data map[int]interface{}) string {
 	jsonStr, err := json.Marshal(data)
 	util_err.Must(err)
 	return string(jsonStr)
 }
 
+// MapToJson 索引为string的map转json
 func MapToJson(data map[string]interface{}) string {
 	jsonStr, err := json.Marshal(data)
 	util_err.Must(err)
 	return string(jsonStr)
 }
 
-//json转map数组
+// JsonToMapArray json转map数组
 func JsonToMapArray(data string) []map[string]interface{} {
 	var res []map[string]interface{}
 	if data == "" {
@@ -57,7 +60,7 @@ func JsonToMapArray(data string) []map[string]interface{} {
 	return res
 }
 
-//json转map
+// JsonToMap json转map
 func JsonToMap(data string) map[string]interface{} {
 	var res map[string]interface{}
 	if data == "" {
@@ -68,7 +71,7 @@ func JsonToMap(data string) map[string]interface{} {
 	return res
 }
 
-//结构体转map
+// StructToMap 结构体转map
 func StructToMap(obj interface{}) map[string]interface{} {
 	obj1 := reflect.TypeOf(obj)
 	obj2 := reflect.ValueOf(obj)
@@ -80,7 +83,7 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	return data
 }
 
-//结构体转json
+// StructToJson 结构体转json
 func StructToJson(v interface{}) (string, error) {
 	jsons, err := json.Marshal(v)
 	if err != nil {
@@ -89,7 +92,7 @@ func StructToJson(v interface{}) (string, error) {
 	return string(jsons), nil
 }
 
-//通过反射结构体转json
+// StructToMapByReflect 通过反射结构体转json
 func StructToMapByReflect(v interface{}) string {
 	userValue := reflect.ValueOf(v)
 	userType := reflect.TypeOf(v)
@@ -114,20 +117,20 @@ func StructToMapByReflect(v interface{}) string {
 	return jsonBuilder.String()
 }
 
-//自定义string转byte
-//解决强转效率低：先分配一个内存再复制内容
-//StringToByte("str"
-func StringToByte(str string) []byte{
+// StringToByte 自定义string转byte
+// 解决强转效率低：先分配一个内存再复制内容
+// StringToByte("str"
+func StringToByte(str string) []byte {
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&str))
 	sliceHeader.Cap = sliceHeader.Len
 	b := *(*[]byte)(unsafe.Pointer(sliceHeader))
 	return b
 }
 
-//自定义byte转string
-//解决强转效率低：先分配一个内存再复制内容
-//ByteToString([]byte("why"))
-func ByteToString(b []byte) string{
+// ByteToString 自定义byte转string
+// 解决强转效率低：先分配一个内存再复制内容
+// ByteToString([]byte("why"))
+func ByteToString(b []byte) string {
 	ptr := (*string)(unsafe.Pointer(&b))
 	return *ptr
 }

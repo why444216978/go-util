@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-//根据最大值生成随机整数
+// RandomN 根据最大值生成随机整数
 func RandomN(n int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(n)
 }
 
-//生成随机bytes
+// GetRandomBytes 生成随机bytes
 func GetRandomBytes(len int) []byte {
 	s := []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	result := make([]byte, len)
@@ -25,6 +25,7 @@ func GetRandomBytes(len int) []byte {
 	return result
 }
 
+// GeGetRandomString 生成随机字符串
 func GetRandomString(l int) string {
 	return string(GetRandomBytes(l))
 }

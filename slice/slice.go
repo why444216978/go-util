@@ -2,7 +2,6 @@ package slice
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 )
 
@@ -20,7 +19,7 @@ import (
 //7.在索引 i 的位置插入切片 b 的所有元素：a = append(a[:i], append(b, a[i:]...)...)
 //8.取出位于切片 a 最末尾的元素 x：x, a := a[len(a)-1:], a[:len(a)-1]
 
-//删除切片指定位置元素
+// DeleteSliceByPos 删除切片指定位置元素
 func DeleteSliceByPos(slice interface{}, index int) (interface{}, error) {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
@@ -32,7 +31,7 @@ func DeleteSliceByPos(slice interface{}, index int) (interface{}, error) {
 	return reflect.AppendSlice(v.Slice(0, index), v.Slice(index+1, v.Len())).Interface(), nil
 }
 
-//在指定位置插入元素
+// InsertSliceByIndex 在指定位置插入元素
 func InsertSliceByIndex(slice interface{}, index int, value interface{}) (interface{}, error) {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
@@ -49,7 +48,7 @@ func InsertSliceByIndex(slice interface{}, index int, value interface{}) (interf
 	return v.Interface(), nil
 }
 
-//更新指定位置元素
+// UpdateSliceByIndex 更新指定位置元素
 func UpdateSliceByIndex(slice interface{}, index int, value interface{}) (interface{}, error) {
 	v := reflect.ValueOf(slice)
 	if v.Kind() != reflect.Slice {
@@ -210,24 +209,24 @@ func SliceSumFloat64(intslice []float64) (sum float64) {
 	return
 }
 
-//备忘：切片指定位置插入和删除原理
-func sliceInsertAndDelete() {
-	//insert
-	data := []int{1, 2, 3, 4, 5}
-	left := data[:3]
-	right := data[3:]
-	tmp := append([]int{}, left...)
-	tmp = append(tmp, 0)
-	res := append(tmp, right...)
-	fmt.Println(res)
+// 备忘：切片指定位置插入和删除原理
+// func sliceInsertAndDelete() {
+// 	//insert
+// 	data := []int{1, 2, 3, 4, 5}
+// 	left := data[:3]
+// 	right := data[3:]
+// 	tmp := append([]int{}, left...)
+// 	tmp = append(tmp, 0)
+// 	res := append(tmp, right...)
+// 	fmt.Println(res)
 
-	//delete
-	data = []int{1, 2, 3, 4, 5}
-	left = data[:3]
-	right = data[3+1:]
-	res = append(left, right...)
-	fmt.Println(res)
-}
+// 	//delete
+// 	data = []int{1, 2, 3, 4, 5}
+// 	left = data[:3]
+// 	right = data[3+1:]
+// 	res = append(left, right...)
+// 	fmt.Println(res)
+// }
 
 /*
 	slice test code:

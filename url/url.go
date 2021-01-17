@@ -8,7 +8,17 @@ import (
 	util_dir "github.com/why444216978/go-util/dir"
 )
 
-//url的path转文件名
+// MapMapToHttpQuery map转uri query
+func MapToHttpQuery(m map[string]interface{}) string {
+	var p = url.Values{}
+
+	for k, v := range m {
+		p.Add(k, v.(string))
+	}
+	return p.Encode()
+}
+
+// uRUriToFilePathByDate url的path转文件名
 func UriToFilePathByDate(uriPath string, dir string) string {
 	pathArr := strings.Split(uriPath, "/")
 	fileName := strings.Join(pathArr, "-")
@@ -18,7 +28,7 @@ func UriToFilePathByDate(uriPath string, dir string) string {
 	return fileName
 }
 
-//uri转log文件名
+// uRUriToFileName uri转log文件名
 func UriToFileName(uri string) string {
 	pathArr := strings.Split(uri, "/")
 	fileName := strings.Join(pathArr, "-")
@@ -26,7 +36,7 @@ func UriToFileName(uri string) string {
 	return fileName
 }
 
-//url转log文件名
+// LogByUrl url转log文件名
 func LogByUrl(fullUrl string) string {
 	u, err := url.Parse(fullUrl)
 	if err != nil {
@@ -41,7 +51,7 @@ func LogByUrl(fullUrl string) string {
 	return fileName
 }
 
-//uri的query转map
+// ParseUriQueryToMap uri的query转map
 func ParseUriQueryToMap(query string) map[string]interface{} {
 	queryMap := strings.Split(query, "&")
 	res := make(map[string]interface{}, len(queryMap))
@@ -55,7 +65,7 @@ func ParseUriQueryToMap(query string) map[string]interface{} {
 	return res
 }
 
-//uri转log路径
+// UriToFilePath uri转log路径
 func UriToFilePath(uri string, dir string) string {
 	pathArr := strings.Split(uri, "/")
 	fileName := strings.Join(pathArr, "-")

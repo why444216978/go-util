@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-//执行系统命令
-func ExecCommand(name string, arg ...string) string{
+// ExecCommand 执行系统命令
+func ExecCommand(name string, arg ...string) string {
 	cmd := exec.Command(name, arg...)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
@@ -20,9 +20,9 @@ func ExecCommand(name string, arg ...string) string{
 	return buf.String()
 }
 
-//执行系统pipe命令
-//ps := exec.Command("ps", "-ef")
-//grep := exec.Command("grep", "-i", "php-fpm")
+// ExecCommandGrep 执行系统pipe命令
+// ps := exec.Command("ps", "-ef")
+// grep := exec.Command("grep", "-i", "php-fpm")
 func ExecCommandGrep(command *exec.Cmd, grep *exec.Cmd) string {
 	r, w := io.Pipe() // 创建一个管道
 	defer r.Close()
@@ -42,7 +42,7 @@ func ExecCommandGrep(command *exec.Cmd, grep *exec.Cmd) string {
 	return buffer.String()
 }
 
-//获得请求IP
+// ExternalIP 获得请求IP
 func ExternalIP() (string, error) {
 	iFaces, err := net.Interfaces()
 	if err != nil {
@@ -80,7 +80,7 @@ func ExternalIP() (string, error) {
 	return "", errors.New("are you connected to the network?")
 }
 
-//获得本机IP
+// LocalIP 获得本机IP
 func LocalIP() (string, error) {
 	addr, err := net.ResolveUDPAddr("udp", "1.2.3.4:1")
 	if err != nil {
@@ -102,11 +102,11 @@ func LocalIP() (string, error) {
 	return host, nil
 }
 
-//获得本机名
+// HostName 获得本机名
 func HostName() string {
 	hostNamePrefix := ""
 	host, err := os.Hostname()
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	if err == nil {
