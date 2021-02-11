@@ -14,7 +14,7 @@ func init() {
 	validate = validator.New()
 }
 
-// example
+// Validate example
 // type Data struct {
 // 	TpPrescriptionCode string   `json:"tp_prescription_code" validate:"required,min=1,max=32"`
 // 	PrescriptionType   uint8    `json:"prescription_type" validate:"required,oneof=1 2"`
