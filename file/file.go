@@ -15,7 +15,10 @@ import (
 
 // WriteWithIo 使用io.WriteString()函数进行数据的写入，不存在则创建
 func WriteWithIo(filePath, content string) error {
-	file := OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	if err != nil {
+		return err
+	}
 	defer file.Close()
 
 	if content != "" {
@@ -156,11 +159,14 @@ func Create(dir string) *os.File {
 	return file
 }
 
-// OpenFile 根据flag打开文件
-func OpenFile(name string, flag int, perm os.FileMode) *os.File {
-	file, err := os.OpenFile(name, flag, perm)
+// CleanFile 清楚文件内容
+func CleanFile(filePath string) error {
+	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_TRUNC, 0777)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	return file
+	defer f.Close()
+
+	_, err = f.WriteString("")
+	return err
 }
