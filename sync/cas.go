@@ -5,8 +5,10 @@ import (
 	"sync/atomic"
 )
 
-const POINT = 10 //TODO 可优化
+// POINT 自旋当前次数协程让出CPU
+const POINT = 10
 
+// AddInt32 CAS增加int32
 func AddInt32(val, add int32) {
 	count := 0
 	for {
@@ -20,6 +22,7 @@ func AddInt32(val, add int32) {
 	}
 }
 
+// AddInt64 CAS增加int64
 func AddInt64(val, add int64) {
 	count := 0
 	for {
@@ -33,6 +36,7 @@ func AddInt64(val, add int64) {
 	}
 }
 
+// AddUint32 CAS增加uint32
 func AddUint32(val, add uint32) {
 	count := 0
 	for {
@@ -46,6 +50,7 @@ func AddUint32(val, add uint32) {
 	}
 }
 
+// AddUint64 CAS增加uint64
 func AddUint64(val, add uint64) {
 	count := 0
 	for {

@@ -6,6 +6,7 @@ import (
 	"sync/atomic"
 )
 
+// ConcurrentIntArray int类型并发安全切片
 type ConcurrentIntArray interface {
 	// Set 用于设置指定索引上的元素值。
 	Set(index int, elem int) (old int, err error)
@@ -71,6 +72,7 @@ type myIntArray struct {
 	segments  []*segment // 内部段列表。
 }
 
+// NewConcurrentIntArray 工厂方法
 func NewConcurrentIntArray(length int) ConcurrentIntArray {
 	if length < 0 {
 		length = 0
