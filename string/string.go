@@ -2,6 +2,7 @@ package string
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -9,7 +10,7 @@ import (
 )
 
 // SubStr 截取字符串，并返回实际截取的长度和子串
-func SubStr(str string, start, end int64) (int64, string) {
+func SubStr(str string, start, end int64) (int64, string, error) {
 	reader := strings.NewReader(str)
 
 	// Calling NewSectionReader method with its parameters
@@ -18,32 +19,29 @@ func SubStr(str string, start, end int64) (int64, string) {
 	// Calling Copy method with its parameters
 	var buf bytes.Buffer
 	n, err := io.Copy(&buf, r)
-	if err != nil {
-		panic(err)
-	}
-	return n, buf.String()
+	return n, buf.String(), err
 }
 
 // SubstrTarget 在字符串中查找指定子串，并返回left或right部分
-func SubstrTarget(str string, target string, turn string, hasPos bool) string {
+func SubstrTarget(str string, target string, turn string, hasPos bool) (string, error) {
 	pos := strings.Index(str, target)
 
 	if pos == -1 {
-		return ""
+		return "", nil
 	}
 
 	if turn == "left" {
 		if hasPos == true {
 			pos = pos + 1
 		}
-		return str[:pos]
+		return str[:pos], nil
 	} else if turn == "right" {
 		if hasPos == false {
 			pos = pos + 1
 		}
-		return str[pos:]
+		return str[pos:], nil
 	} else {
-		panic("params 3 error")
+		return "", errors.New("params 3 error")
 	}
 }
 

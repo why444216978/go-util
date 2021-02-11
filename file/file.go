@@ -47,13 +47,12 @@ func ReadLimit(str string, len int64) string {
 }
 
 // ReadFile 读取整个文件
-func ReadFile(dir string) string {
+func ReadFile(dir string) (string, error) {
 	data, err := ioutil.ReadFile(dir)
 	if err != nil {
-		panic(err)
-		return ""
+		return "", err
 	}
-	return string(data)
+	return string(data), nil
 }
 
 //ReadFileLine  按行读取文件
@@ -119,7 +118,7 @@ func GetFileStat(file *os.File) *syscall.Stat_t {
 }
 
 // Chown 更改文件所有者
-func Chown(file *os.File, uid, gid int) {
+func Chown(file *os.File, uid, gid int) error {
 	if uid == 0 {
 		uid = os.Getuid()
 	}
@@ -127,36 +126,22 @@ func Chown(file *os.File, uid, gid int) {
 		gid = os.Getgid()
 	}
 
-	err := file.Chown(uid, gid)
-	if err != nil {
-		panic(err)
-	}
+	return file.Chown(uid, gid)
 }
 
 // Chmod 更改文件权限
-func Chmod(file *os.File, mode int) {
-	err := file.Chmod(os.FileMode(mode))
-	if err != nil {
-		panic(err)
-	}
+func Chmod(file *os.File, mode int) error {
+	return file.Chmod(os.FileMode(mode))
 }
 
 // Open 打开文件
-func Open(dir string) *os.File {
-	file, err := os.Open(dir)
-	if err != nil {
-		panic(err)
-	}
-	return file
+func Open(dir string) (*os.File, error) {
+	return os.Open(dir)
 }
 
 // Create 创建文件
-func Create(dir string) *os.File {
-	file, err := os.Create(dir)
-	if err != nil {
-		panic(err)
-	}
-	return file
+func Create(dir string) (*os.File, error) {
+	return os.Create(dir)
 }
 
 // CleanFile 清楚文件内容

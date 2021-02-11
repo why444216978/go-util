@@ -231,30 +231,3 @@ func AscByField(list []map[string]interface{}, field string) {
 // 	res = append(left, right...)
 // 	fmt.Println(res)
 // }
-
-/*
-	slice test code:
-	i := 1
-	a := []int{1, 2, 3}
-	fmt.Println(a)
-	res, err := slice.InsertSliceByIndex(a , i, 9)
-	if err != nil{
-		panic(err)
-	}
-	data := res.([]int)
-	fmt.Println(data)
-
-	res, err = slice.DeleteSliceByPos(data, i)
-	if err != nil{
-		panic(err)
-	}
-	data = res.([]int)
-	fmt.Println(data)
-
-	res, err = slice.UpdateSliceByIndex(data, i , 6)
-	if err != nil{
-		panic(err)
-	}
-	data = res.([]int)
-	fmt.Println(data)
-*/

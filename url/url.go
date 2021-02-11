@@ -37,10 +37,10 @@ func UriToFileName(uri string) string {
 }
 
 // LogByUrl url转log文件名
-func LogByUrl(fullUrl string) string {
+func LogByUrl(fullUrl string) (string, error) {
 	u, err := url.Parse(fullUrl)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	pathArr := strings.Split(u.Path, "/")
@@ -48,7 +48,7 @@ func LogByUrl(fullUrl string) string {
 	writePath := "/tmp/logs/2020-01-12"
 	fileName = path.Join(writePath, fileName[1:len(fileName)]+".log")
 
-	return fileName
+	return fileName, nil
 }
 
 // ParseUriQueryToMap uri的query转map

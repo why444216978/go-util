@@ -103,11 +103,11 @@ func LocalIP() (string, error) {
 }
 
 // HostName 获得本机名
-func HostName() string {
+func HostName() (string, error) {
 	hostNamePrefix := ""
 	host, err := os.Hostname()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	if err == nil {
 		parts := strings.SplitN(host, ".", 2)
@@ -115,20 +115,21 @@ func HostName() string {
 			hostNamePrefix = parts[0]
 		}
 	}
-	return hostNamePrefix
+	return hostNamePrefix, nil
 }
 
-func GetInternalIp() string {
+// GetInternalIP 获得请求IP
+func GetInternalIP() (string, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	for _, address := range addrs {
 		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
-				return ipnet.IP.String()
+				return ipnet.IP.String(), nil
 			}
 		}
 	}
-	panic("cannot get internal ip")
+	return "", errors.New("cannot get internal ip")
 }
