@@ -3,6 +3,7 @@ package slice
 import (
 	"errors"
 	"reflect"
+	"sort"
 )
 
 //切片快捷操作汇总：
@@ -62,7 +63,8 @@ func UpdateSliceByIndex(slice interface{}, index int, value interface{}) (interf
 	return v.Interface(), nil
 }
 
-func SliceContains(sl []interface{}, v interface{}) bool {
+// ContainsInterface 是否包含指定interface
+func ContainsInterface(sl []interface{}, v interface{}) bool {
 	for _, vv := range sl {
 		if vv == v {
 			return true
@@ -71,7 +73,8 @@ func SliceContains(sl []interface{}, v interface{}) bool {
 	return false
 }
 
-func SliceContainsInt(sl []int, v int) bool {
+// ContainsInt 是否包含指定int
+func ContainsInt(sl []int, v int) bool {
 	for _, vv := range sl {
 		if vv == v {
 			return true
@@ -80,7 +83,8 @@ func SliceContainsInt(sl []int, v int) bool {
 	return false
 }
 
-func SliceContainsInt64(sl []int64, v int64) bool {
+// ContainsInt64 是否包含指定int64
+func ContainsInt64(sl []int64, v int64) bool {
 	for _, vv := range sl {
 		if vv == v {
 			return true
@@ -89,7 +93,8 @@ func SliceContainsInt64(sl []int64, v int64) bool {
 	return false
 }
 
-func SliceContainsString(sl []string, v string) bool {
+// ContainsString 是否包含指定string
+func ContainsString(sl []string, v string) bool {
 	for _, vv := range sl {
 		if vv == v {
 			return true
@@ -98,28 +103,8 @@ func SliceContainsString(sl []string, v string) bool {
 	return false
 }
 
-// SliceMerge merges interface slices to one slice.
-func SliceMerge(slice1, slice2 []interface{}) (c []interface{}) {
-	c = append(slice1, slice2...)
-	return
-}
-
-func SliceMergeInt(slice1, slice2 []int) (c []int) {
-	c = append(slice1, slice2...)
-	return
-}
-
-func SliceMergeInt64(slice1, slice2 []int64) (c []int64) {
-	c = append(slice1, slice2...)
-	return
-}
-
-func SliceMergeString(slice1, slice2 []string) (c []string) {
-	c = append(slice1, slice2...)
-	return
-}
-
-func SliceUniqueInt64(s []int64) []int64 {
+// UniqueInt64 int64切片去重
+func UniqueInt64(s []int64) []int64 {
 	size := len(s)
 	if size == 0 {
 		return []int64{}
@@ -142,7 +127,8 @@ func SliceUniqueInt64(s []int64) []int64 {
 	return ret
 }
 
-func SliceUniqueInt(s []int) []int {
+// UniqueInt int切片去重
+func UniqueInt(s []int) []int {
 	size := len(s)
 	if size == 0 {
 		return []int{}
@@ -165,7 +151,8 @@ func SliceUniqueInt(s []int) []int {
 	return ret
 }
 
-func SliceUniqueString(s []string) []string {
+// UniqueString string切片去重
+func UniqueString(s []string) []string {
 	size := len(s)
 	if size == 0 {
 		return []string{}
@@ -188,25 +175,42 @@ func SliceUniqueString(s []string) []string {
 	return ret
 }
 
-func SliceSumInt64(intslice []int64) (sum int64) {
+// SumInt64 int64切片求和
+func SumInt64(intslice []int64) (sum int64) {
 	for _, v := range intslice {
 		sum += v
 	}
 	return
 }
 
-func SliceSumInt(intslice []int) (sum int) {
+// SumInt int切片求和
+func SumInt(intslice []int) (sum int) {
 	for _, v := range intslice {
 		sum += v
 	}
 	return
 }
 
-func SliceSumFloat64(intslice []float64) (sum float64) {
+// SumFloat64 float64切片求和
+func SumFloat64(intslice []float64) (sum float64) {
 	for _, v := range intslice {
 		sum += v
 	}
 	return
+}
+
+// DescByField 根据切片中map的指定字段降序排序
+func DescByField(list []map[string]interface{}, field string) {
+	sort.Slice(list, func(i, j int) bool {
+		return list[i][field].(int64) > list[j][field].(int64)
+	})
+}
+
+// AscByField 根据切片中map的指定字段升序排序
+func AscByField(list []map[string]interface{}, field string) {
+	sort.Slice(list, func(i, j int) bool {
+		return list[i][field].(int64) < list[j][field].(int64)
+	})
 }
 
 // 备忘：切片指定位置插入和删除原理
