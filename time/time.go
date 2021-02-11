@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // Date 等同于PHP的date函数
@@ -52,11 +54,13 @@ func Date(format string, ts ...time.Time) string {
 
 // StrToTime 等同于PHP的strtotime函数
 // StrToTime("2020-12-19 14:16:22")
-func StrToTime(value string) time.Time {
+func StrToTime(value string) (time.Time, error) {
 	if value == "" {
-		return time.Time{}
+		return time.Time{}, errors.New("value is null")
 	}
 	layouts := []string{
+		"20060102",
+		"20060102150405",
 		"2006-01-02 15:04:05 -0700 MST",
 		"2006-01-02 15:04:05 -0700",
 		"2006-01-02 15:04:05",
@@ -95,16 +99,16 @@ func StrToTime(value string) time.Time {
 	for _, layout := range layouts {
 		t, err = time.Parse(layout, value)
 		if err == nil {
-			return t
+			return t, nil
 		}
 	}
-	panic(err)
+	return t, errors.Wrap(err, "StrToTime fail:")
 }
 
 // StrToLocalTime 字符串转本地时间
-func StrToLocalTime(value string) time.Time {
+func StrToLocalTime(value string) (time.Time, error) {
 	if value == "" {
-		return time.Time{}
+		return time.Time{}, errors.New("value is null")
 	}
 	zoneName, offset := time.Now().Zone()
 
@@ -171,7 +175,6 @@ func TimeToHuman(ts int) string {
 	for _, v := range data {
 		var c = t / v["key"].(int)
 		if 0 != c {
-			fmt.Println(c)
 			suffix := "前"
 			if c < 0 {
 				suffix = "后"
@@ -183,6 +186,18 @@ func TimeToHuman(ts int) string {
 	}
 
 	return res
+}
+
+// StringTimestampToTime StringTimestampToTime("1600000000")
+func StringTimestampToTime(str string) time.Time {
+	intTmp, _ := strconv.Atoi(str)
+	return time.Unix(int64(intTmp), 0)
+}
+
+// StringTimestampToDatetime StringTimestampToDatetime("1600000000")
+func StringTimestampToDatetime(str string) string {
+	intTmp, _ := strconv.Atoi(str)
+	return Date("Y-m-d H:i:s", time.Unix(int64(intTmp), 0))
 }
 
 // GetCurrentDate 获取当前的时间 - 字符串
@@ -225,26 +240,38 @@ func RoundMinute(t time.Time) time.Time {
 	return t.Round(1 * time.Minute)
 }
 
-// TruncateHourStr string小时向下取证
-func TruncateHourStr(str string) time.Time {
-	t := StrToTime(str)
-	return t.Truncate(1 * time.Hour)
+// TruncateHourStr string小时向下取整
+func TruncateHourStr(str string) (time.Time, error) {
+	t, err := StrToTime(str)
+	if err != nil {
+		return t, err
+	}
+	return t.Truncate(1 * time.Hour), nil
 }
 
 // RoundHourStr string小时向上取整
-func RoundHourStr(str string) time.Time {
-	t := StrToTime(str)
-	return t.Round(1 * time.Hour)
+func RoundHourStr(str string) (time.Time, error) {
+	t, err := StrToTime(str)
+	if err != nil {
+		return t, err
+	}
+	return t.Round(1 * time.Hour), nil
 }
 
 // TruncateMinuteStr string分钟向下取整
-func TruncateMinuteStr(str string) time.Time {
-	t := StrToTime(str)
-	return t.Truncate(1 * time.Minute)
+func TruncateMinuteStr(str string) (time.Time, error) {
+	t, err := StrToTime(str)
+	if err != nil {
+		return t, err
+	}
+	return t.Truncate(1 * time.Minute), nil
 }
 
 // RoundMinuteStr string分钟向上取整
-func RoundMinuteStr(str string) time.Time {
-	t := StrToTime(str)
-	return t.Round(1 * time.Minute)
+func RoundMinuteStr(str string) (time.Time, error) {
+	t, err := StrToTime(str)
+	if err != nil {
+		return t, err
+	}
+	return t.Round(1 * time.Minute), nil
 }
