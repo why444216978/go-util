@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// FormatEqString 格式化string等于
 func FormatEqString(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -15,6 +16,7 @@ func FormatEqString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatEqInt 格式化int等于
 func FormatEqInt(m map[string]int) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -26,6 +28,7 @@ func FormatEqInt(m map[string]int) map[string]interface{} {
 	return ret
 }
 
+// FormatGtString 格式化string大于
 func FormatGtString(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -37,6 +40,7 @@ func FormatGtString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatGtInt 格式化int大于
 func FormatGtInt(m map[string]int) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -48,6 +52,7 @@ func FormatGtInt(m map[string]int) map[string]interface{} {
 	return ret
 }
 
+// FormatLtString 格式化string小于
 func FormatLtString(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -59,6 +64,7 @@ func FormatLtString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatLtInt 格式化int小于
 func FormatLtInt(m map[string]int) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -70,6 +76,7 @@ func FormatLtInt(m map[string]int) map[string]interface{} {
 	return ret
 }
 
+// FormatGteString 格式化string大于等于
 func FormatGteString(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -81,6 +88,7 @@ func FormatGteString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatGteInt 格式化int大于等于
 func FormatGteInt(m map[string]int) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -92,6 +100,7 @@ func FormatGteInt(m map[string]int) map[string]interface{} {
 	return ret
 }
 
+// FormatLteString 格式化string小于等于
 func FormatLteString(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -103,6 +112,7 @@ func FormatLteString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatLteInt 格式化int小于等于
 func FormatLteInt(m map[string]int) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -114,6 +124,7 @@ func FormatLteInt(m map[string]int) map[string]interface{} {
 	return ret
 }
 
+// FormatLike 格式化like
 func FormatLike(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -125,6 +136,7 @@ func FormatLike(m map[string]string) map[string]interface{} {
 	return ret
 }
 
+// FormatInString 格式化string切片类型in条件
 func FormatInString(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -136,6 +148,7 @@ func FormatInString(m map[string]interface{}) map[string]interface{} {
 	return ret
 }
 
+// FormatInInt 格式化int切片类型in条件
 func FormatInInt(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
@@ -145,54 +158,4 @@ func FormatInInt(m map[string]interface{}) map[string]interface{} {
 		ret[fmt.Sprintf("%s in (?)", k)] = v
 	}
 	return ret
-}
-
-func FormatWhereQuery(intQueryMap map[string]int, stringQueryMap map[string]string, likeQueryMap map[string]string,
-	intSliceQueryMap map[string][]int, stringSliceQueryMap map[string][]string) (map[string]int, map[string]string, map[string]string, map[string][]int, map[string][]string) {
-
-	daoIntQueryMap := make(map[string]int)
-	for k, v := range intQueryMap {
-		if v == 0 {
-			continue
-		}
-		query := fmt.Sprintf("%s = ?", k)
-		daoIntQueryMap[query] = v
-	}
-
-	daoStringQueryMap := make(map[string]string)
-	for k, v := range stringQueryMap {
-		if v == "" {
-			continue
-		}
-
-		query := fmt.Sprintf("%s = ?", k)
-		daoStringQueryMap[query] = v
-	}
-
-	daoLikequeryMap := make(map[string]string)
-	for k, v := range likeQueryMap {
-		if v == "" {
-			continue
-		}
-		query := fmt.Sprintf("%s Like ?", k)
-		daoLikequeryMap[query] = v
-	}
-
-	daoIntSliceQueryMap := make(map[string][]int)
-	for k, v := range intSliceQueryMap {
-		if v == nil {
-			continue
-		}
-		daoIntSliceQueryMap[fmt.Sprintf("%s in (?)", k)] = v
-	}
-
-	daoStringSliceQueryMap := make(map[string][]string)
-	for k, v := range stringSliceQueryMap {
-		if v == nil {
-			continue
-		}
-		daoStringSliceQueryMap[fmt.Sprintf("%s in (?)", k)] = v
-	}
-
-	return daoIntQueryMap, daoStringQueryMap, daoLikequeryMap, daoIntSliceQueryMap, daoStringSliceQueryMap
 }
