@@ -111,3 +111,20 @@ func SnakeToCamel(s string) string {
 	}
 	return string(data[:])
 }
+
+
+// UcFirst 首字母大写
+func UcFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+// LcFirst 首字母小写
+func LcFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
+}

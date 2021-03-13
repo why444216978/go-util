@@ -67,19 +67,28 @@ func JsonToMap(data string) (map[string]interface{}, error) {
 }
 
 // StructToMap struct转map
-func StructToMap(obj interface{}) map[string]interface{} {
-	obj1 := reflect.TypeOf(obj)
-	obj2 := reflect.ValueOf(obj)
+func StructToMap(obj interface{}) (data map[string]interface{}, err error) {
+	data = make(map[string]interface{})
 
-	var data = make(map[string]interface{})
+	obj1 := reflect.TypeOf(obj)
+	if obj1.Kind() != reflect.Struct {
+		err = errors.New("type not Struct")
+		return
+	}
+	obj2 := reflect.ValueOf(obj)
+	if obj2.Kind() != reflect.Struct {
+		err = errors.New("value not Struct")
+		return
+	}
+
 	for i := 0; i < obj1.NumField(); i++ {
 		k := obj1.Field(i).Tag.Get("json")
 		if k == "" {
 			k = obj1.Field(i).Name
 		}
-		data[strings.ToLower(k)] = obj2.Field(i).Interface()
+		data[k] = obj2.Field(i).Interface()
 	}
-	return data
+	return
 }
 
 // GetStructJson 获得结构体的json切片
@@ -104,6 +113,31 @@ func StructToJson(v interface{}) (string, error) {
 		return "", err
 	}
 	return string(jsons), nil
+}
+
+// StructToJsonByReflect 通过反射结构体转json
+func StructToJsonByReflect(v interface{}) string {
+	userValue := reflect.ValueOf(v)
+	userType := reflect.TypeOf(v)
+
+	jsonBuilder := strings.Builder{}
+	jsonBuilder.WriteString("{")
+
+	num := userType.NumField()
+
+	for i := 0; i < num; i++ {
+		jsonTag := userType.Field(i).Tag.Get("json")
+
+		jsonBuilder.WriteString("\"" + jsonTag + "\"")
+		jsonBuilder.WriteString(":")
+		jsonBuilder.WriteString(fmt.Sprintf("\"%v\"", userValue.Field(i)))
+		if i < num-1 {
+			jsonBuilder.WriteString(",")
+		}
+	}
+	jsonBuilder.WriteString("}")
+
+	return jsonBuilder.String()
 }
 
 // StructToMapByReflect 通过反射结构体转json

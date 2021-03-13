@@ -7,13 +7,13 @@ func Page(list []map[string]interface{}, pageNum, pageSize, total int) map[strin
 	page := make(map[string]interface{})
 	page["has_next"] = true
 	page["current"] = pageNum
-	page["next"] = pageSize + 1
+	page["next"] = pageNum + 1
 
 	count := len(list)
 	if count <= pageSize {
 		page["has_next"] = false
 	}
-	page["total"] = math.Ceil(float64(count) / float64(pageSize))
+	page["total"] = math.Ceil(float64(total) / float64(pageSize))
 	page["total_rows"] = total
 
 	return page

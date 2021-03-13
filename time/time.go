@@ -49,6 +49,9 @@ func Date(format string, ts ...time.Time) string {
 	if len(ts) > 0 {
 		t = ts[0]
 	}
+	if t.Unix() <= 0 {
+		return ""
+	}
 	return t.Format(format)
 }
 

@@ -45,3 +45,17 @@ func Validate(val interface{}) error {
 	}
 	return nil
 }
+
+// ValidateCamel 校验驼峰命名参数
+func ValidateCamel(val interface{}) error {
+	err := validate.Struct(val)
+	if err == nil {
+		return nil
+	}
+
+	for _, err := range err.(validator.ValidationErrors) {
+		field := util_str.LcFirst(err.Field())
+		return errors.New(fmt.Sprintf("param %s must %s %s", field, err.Tag(), err.Param()))
+	}
+	return nil
+}

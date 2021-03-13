@@ -13,7 +13,7 @@ func MapToHttpQuery(m map[string]interface{}) string {
 	var p = url.Values{}
 
 	for k, v := range m {
-		p.Add(k, v.(string))
+		p.Add(k, fmt.Sprintf("%v", v))
 	}
 	return p.Encode()
 }

@@ -29,7 +29,6 @@ func Send(method, url string, header map[string]string, body string) (ret map[st
 	for k, v := range header {
 		req.Header.Add(k, v)
 	}
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	//发送请求
 	resp, err := client.Do(req)
@@ -58,4 +57,24 @@ func Send(method, url string, header map[string]string, body string) (ret map[st
 	}
 
 	return
+}
+
+// PostForm 发送POST表单请求
+func PostForm(ctx context.Context, postUrl string, data map[string]interface{}) (string, error) {
+	body := url.Values{}
+	for k, v := range data {
+		body.Add(k, fmt.Sprintf("%v", v))
+	}
+
+	res, err := http.PostForm(postUrl, body)
+	if err != nil {
+		err = errors.Wrap(err, "util post from fail")
+		resource.LoggerService.Error(ctx, err.Error())
+		return "", err
+	}
+	defer res.Body.Close()
+
+	resp, _ := ioutil.ReadAll(res.Body)
+
+	return string(resp), nil
 }
