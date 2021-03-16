@@ -69,7 +69,6 @@ func PostForm(ctx context.Context, postUrl string, data map[string]interface{}) 
 	res, err := http.PostForm(postUrl, body)
 	if err != nil {
 		err = errors.Wrap(err, "util post from fail")
-		resource.LoggerService.Error(ctx, err.Error())
 		return "", err
 	}
 	defer res.Body.Close()
