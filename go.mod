@@ -1,4 +1,4 @@
-module github.com/why444216978/go-util
+module github.com/why444216978/go-util/v2
 
 go 1.13
 
