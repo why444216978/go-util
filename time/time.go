@@ -278,3 +278,21 @@ func RoundMinuteStr(str string) (time.Time, error) {
 	}
 	return t.Round(1 * time.Minute), nil
 }
+
+// Countdown 时间倒计时
+func Countdown(end int64) (day, hour, minute, second int64) {
+	start := time.Now().Unix()
+	diff := end - start
+	if diff <= 0 {
+		return
+	}
+
+	day = diff / 86400
+	diff = diff - day*86400
+	hour = diff / 3600
+	diff = diff - hour*3600
+	minute = diff / 60
+	second = diff - minute*60
+
+	return
+}
