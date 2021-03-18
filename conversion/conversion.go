@@ -1,6 +1,7 @@
 package conversion
 
 import (
+	"github.com/pkg/errors"
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
