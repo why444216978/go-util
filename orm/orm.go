@@ -82,8 +82,13 @@ func Delete(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 	return res.RowsAffected, res.Error
 }
 
-// FormatEqString 格式化string等于
-func FormatEqString(m map[string]string) map[string]interface{} {
+// FormatEq
+func FormatEq(v interface{}) string {
+	return fmt.Sprintf("%s = ?", v)
+}
+
+// FormatEqList
+func FormatEqList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -94,20 +99,13 @@ func FormatEqString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatEqInt 格式化int等于
-func FormatEqInt(m map[string]int) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for k, v := range m {
-		if v == 0 {
-			continue
-		}
-		ret[fmt.Sprintf("%s = ?", k)] = v
-	}
-	return ret
+// FormatGt
+func FormatGt(v interface{}) string {
+	return fmt.Sprintf("%s > ?", v)
 }
 
-// FormatGtString 格式化string大于
-func FormatGtString(m map[string]string) map[string]interface{} {
+// FormatGtList
+func FormatGtList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -118,20 +116,13 @@ func FormatGtString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatGtInt 格式化int大于
-func FormatGtInt(m map[string]int) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for k, v := range m {
-		if v == 0 {
-			continue
-		}
-		ret[fmt.Sprintf("%s > ?", k)] = v
-	}
-	return ret
+// FormatLt
+func FormatLt(v interface{}) string {
+	return fmt.Sprintf("%s < ?", v)
 }
 
-// FormatLtString 格式化string小于
-func FormatLtString(m map[string]string) map[string]interface{} {
+// FormatLtList
+func FormatLtList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -142,20 +133,13 @@ func FormatLtString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatLtInt 格式化int小于
-func FormatLtInt(m map[string]int) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for k, v := range m {
-		if v == 0 {
-			continue
-		}
-		ret[fmt.Sprintf("%s < ?", k)] = v
-	}
-	return ret
+// FormatGte
+func FormatGte(v interface{}) string {
+	return fmt.Sprintf("%s >= ?", v)
 }
 
-// FormatGteString 格式化string大于等于
-func FormatGteString(m map[string]string) map[string]interface{} {
+// FormatGteList
+func FormatGteList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -166,20 +150,13 @@ func FormatGteString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatGteInt 格式化int大于等于
-func FormatGteInt(m map[string]int) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for k, v := range m {
-		if v == 0 {
-			continue
-		}
-		ret[fmt.Sprintf("%s >=", k)] = v
-	}
-	return ret
+// FormatLte
+func FormatLte(v interface{}) string {
+	return fmt.Sprintf("%s <= ?", v)
 }
 
-// FormatLteString 格式化string小于等于
-func FormatLteString(m map[string]string) map[string]interface{} {
+// FormatLteList
+func FormatLteList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -190,20 +167,13 @@ func FormatLteString(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatLteInt 格式化int小于等于
-func FormatLteInt(m map[string]int) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for k, v := range m {
-		if v == 0 {
-			continue
-		}
-		ret[fmt.Sprintf("%s <=", k)] = v
-	}
-	return ret
+// FormatLike
+func FormatLike(v interface{}) string {
+	return fmt.Sprintf("%s like ?", v)
 }
 
-// FormatLike 格式化like
-func FormatLike(m map[string]string) map[string]interface{} {
+// FormatLikeList
+func FormatLikeList(m map[string]string) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == "" {
@@ -214,8 +184,13 @@ func FormatLike(m map[string]string) map[string]interface{} {
 	return ret
 }
 
-// FormatInString 格式化string切片类型in条件
-func FormatInString(m map[string]interface{}) map[string]interface{} {
+// FormatIn
+func FormatIn(v interface{}) string {
+	return fmt.Sprintf("%s in (?)", v)
+}
+
+// FormatInList
+func FormatInList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == nil {
@@ -226,14 +201,19 @@ func FormatInString(m map[string]interface{}) map[string]interface{} {
 	return ret
 }
 
-// FormatInInt 格式化int切片类型in条件
-func FormatInInt(m map[string]interface{}) map[string]interface{} {
+// FormatNotIn
+func FormatNotIn(v interface{}) string {
+	return fmt.Sprintf("%s not in (?)", v)
+}
+
+// FormatNotInList
+func FormatNotInList(m map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
 	for k, v := range m {
 		if v == nil {
 			continue
 		}
-		ret[fmt.Sprintf("%s in (?)", k)] = v
+		ret[fmt.Sprintf("%s not in (?)", k)] = v
 	}
 	return ret
 }
