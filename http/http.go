@@ -2,9 +2,11 @@ package http
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/pkg/errors"
 )
