@@ -1,6 +1,7 @@
 package url
 
 import (
+	"fmt"
 	"net/url"
 	"path"
 	"strings"
