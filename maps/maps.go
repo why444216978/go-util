@@ -1,5 +1,10 @@
 package maps
 
+import (
+	"fmt"
+	"sort"
+)
+
 // MergeInterface 合并interface类型的map
 func MergeInterface(list ...map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
