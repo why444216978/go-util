@@ -1,4 +1,4 @@
-package go_util
+package uuid
 
 import (
 	"github.com/google/uuid"
