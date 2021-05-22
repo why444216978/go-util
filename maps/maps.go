@@ -1,5 +1,10 @@
 package maps
 
+import (
+	"fmt"
+	"sort"
+)
+
 // MergeInterface 合并interface类型的map
 func MergeInterface(list ...map[string]interface{}) map[string]interface{} {
 	ret := make(map[string]interface{})
@@ -58,6 +63,15 @@ func KeySort(m map[string]interface{}) []map[string]string {
 
 // GetKeyList 获得map的key列表
 func GetKeyList(m map[string]interface{}) []string {
+	list := make([]string, 0)
+	for k, _ := range m {
+		list = append(list, k)
+	}
+	return list
+}
+
+// GetStringValueList 获得字符串map值列表
+func GetStringValueList(m map[string]string) []string {
 	list := make([]string, 0)
 	for k, _ := range m {
 		list = append(list, k)

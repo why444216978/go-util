@@ -3,13 +3,21 @@ package conversion
 import (
 	"bytes"
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
+	"io"
 	"reflect"
 	"strconv"
 	"strings"
 	"unsafe"
+
+	json "github.com/json-iterator/go"
+	"github.com/json-iterator/go/extra"
+	"github.com/pkg/errors"
 )
+
+func init() {
+	extra.RegisterFuzzyDecoders()
+}
 
 // DeepCopy 深拷贝转换
 //	 type User struct {
@@ -64,6 +72,11 @@ func JsonToMap(data string) (map[string]interface{}, error) {
 	err := json.Unmarshal([]byte(data), &res)
 
 	return res, err
+}
+
+// ReaderToStruct 解析reader到结构体
+func ReaderToStruct(reader io.Reader, val interface{}) error {
+	return json.NewDecoder(reader).Decode(val)
 }
 
 // StructToMap struct转map

@@ -9,8 +9,6 @@ import (
 	"os"
 	"strings"
 	"syscall"
-
-	util_err "github.com/why444216978/go-util/error"
 )
 
 // WriteWithIo 使用io.WriteString()函数进行数据的写入，不存在则创建
@@ -56,9 +54,11 @@ func ReadFile(dir string) (string, error) {
 }
 
 //ReadFileLine  按行读取文件
-func ReadFileLine(dir string) map[int]string {
+func ReadFileLine(dir string) (map[int]string, error) {
 	file, err := os.OpenFile(dir, os.O_RDWR, 0666)
-	util_err.Must(err)
+	if err != nil {
+		return nil, err
+	}
 	defer file.Close()
 
 	/* stat, err := file.Stat()
@@ -79,18 +79,20 @@ func ReadFileLine(dir string) map[int]string {
 		res[i] = context
 		i++
 	}
-	return res
+	return res, nil
 }
 
 // ReadJsonFile 读取json文件
-func ReadJsonFile(dir string) string {
+func ReadJsonFile(dir string) (string, error) {
 	jsonFile, err := os.Open(dir)
-	util_err.Must(err)
+	if err != nil {
+		return "", err
+	}
 
 	defer jsonFile.Close()
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	return string(byteValue)
+	return string(byteValue), nil
 }
 
 // GetFileInfo 获得文件Info

@@ -57,10 +57,17 @@ func Date(format string, ts ...time.Time) string {
 
 // StrToTime 等同于PHP的strtotime函数
 // StrToTime("2020-12-19 14:16:22")
-func StrToTime(value string) (time.Time, error) {
+func StrToTime(value string) (t time.Time, err error) {
 	if value == "" {
-		return time.Time{}, errors.New("value is null")
+		err = errors.New("value is null")
+		return
 	}
+
+	l, err := time.LoadLocation("Local")
+	if err != nil {
+		return
+	}
+
 	layouts := []string{
 		"20060102",
 		"20060102150405",
@@ -97,15 +104,38 @@ func StrToTime(value string) (time.Time, error) {
 		time.StampNano,
 	}
 
-	var t time.Time
-	var err error
 	for _, layout := range layouts {
-		t, err = time.Parse(layout, value)
+		t, err = time.ParseInLocation(layout, value, l)
 		if err == nil {
-			return t, nil
+			return
 		}
 	}
-	return t, errors.Wrap(err, "StrToTime fail:")
+	return
+}
+
+// SubDays 计算日期相差多少天
+// 返回值day>0, t1晚于t2; day<0, t1早于t2
+func SubDays(t1, t2 time.Time) (day int) {
+	swap := false
+	if t1.Unix() < t2.Unix() {
+		t_ := t1
+		t1 = t2
+		t2 = t_
+		swap = true
+	}
+
+	day = int(t1.Sub(t2).Hours() / 24)
+
+	// 计算在被24整除外的时间是否存在跨自然日
+	if int(t1.Sub(t2).Milliseconds())%86400000 > int(86400000-t2.Unix()%86400000) {
+		day += 1
+	}
+
+	if swap {
+		day = -day
+	}
+
+	return
 }
 
 // StrToLocalTime 字符串转本地时间

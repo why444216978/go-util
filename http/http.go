@@ -79,3 +79,12 @@ func PostForm(ctx context.Context, postUrl string, data map[string]interface{}) 
 
 	return string(resp), nil
 }
+
+// ExtractBoy 解析请求body并回写
+func ExtractBody(req http.Request) string {
+	var buf bytes.Buffer
+	buf.ReadFrom(req.Body)
+	req.Body = ioutil.NopCloser(&buf)
+
+	return buf.String()
+}
