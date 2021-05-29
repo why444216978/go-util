@@ -1,7 +1,6 @@
 package conversion
 
 import (
-	"github.com/pkg/errors"
 	"bytes"
 	"encoding/gob"
 	"fmt"
@@ -11,9 +10,10 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/pkg/errors"
+
 	json "github.com/json-iterator/go"
 	"github.com/json-iterator/go/extra"
-	"github.com/pkg/errors"
 )
 
 func init() {
