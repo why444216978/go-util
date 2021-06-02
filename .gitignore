@@ -17,3 +17,4 @@ test/*
 test.go
 configs/*
 go.sum
+cover.out
