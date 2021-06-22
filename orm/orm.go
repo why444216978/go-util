@@ -2,8 +2,10 @@ package orm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -216,4 +218,10 @@ func FormatNotInList(m map[string]interface{}) map[string]interface{} {
 		ret[fmt.Sprintf("%s not in (?)", k)] = v
 	}
 	return ret
+}
+
+// ExtractError extract gorm error to judge db error
+func ExtractError(err error) (mysqlErr *mysql.MySQLError) {
+	errors.As(err, &mysqlErr)
+	return
 }
