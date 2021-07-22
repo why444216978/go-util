@@ -9,8 +9,17 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+	ErrDBNil = errors.New("db is nil")
+)
+
 // Count 数量
 func Count(ctx context.Context, db *gorm.DB, model interface{}, where map[string]interface{}) (count int64, err error) {
+	if db == nil {
+		err = ErrDBNil
+		return
+	}
+
 	db = db.Model(model)
 
 	for k, v := range where {
@@ -24,6 +33,11 @@ func Count(ctx context.Context, db *gorm.DB, model interface{}, where map[string
 
 // Select 查询
 func Select(ctx context.Context, db *gorm.DB, model interface{}, fields string, where map[string]interface{}, group []string, groupData interface{}, having map[string]interface{}, order []string, start, limit int) (err error) {
+	if db == nil {
+		err = ErrDBNil
+		return
+	}
+
 	db = db.Model(model).Select(fields)
 
 	for k, v := range where {
@@ -54,7 +68,11 @@ func Select(ctx context.Context, db *gorm.DB, model interface{}, fields string, 
 }
 
 // Update 更新
-func Update(ctx context.Context, db *gorm.DB, model interface{}, where map[string]interface{}, updates map[string]interface{}) (int64, error) {
+func Update(ctx context.Context, db *gorm.DB, model interface{}, where map[string]interface{}, updates map[string]interface{}) (affectRows int64, err error) {
+	if db == nil {
+		return 0, ErrDBNil
+	}
+
 	db = db.Model(model)
 
 	for k, v := range where {
@@ -75,6 +93,10 @@ func Insert(ctx context.Context, db *gorm.DB, model interface{}) (int64, error) 
 
 // Delete 删除
 func Delete(ctx context.Context, db *gorm.DB, model interface{}, where map[string]interface{}) (int64, error) {
+	if db == nil {
+		return 0, ErrDBNil
+	}
+
 	for k, v := range where {
 		db.Where(k, v)
 	}
