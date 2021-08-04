@@ -106,6 +106,42 @@ func Delete(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 	return res.RowsAffected, res.Error
 }
 
+func WithWhere(ctx context.Context, db *gorm.DB, where map[string]interface{}) *gorm.DB {
+	if db == nil {
+		return nil
+	}
+
+	for k, v := range where {
+		db.Where(k, v)
+	}
+
+	return db
+}
+
+func WithOrder(ctx context.Context, db *gorm.DB, order []string) *gorm.DB {
+	if db == nil {
+		return nil
+	}
+
+	for k, v := range order {
+		db.Having(k, v)
+	}
+
+	return db
+}
+
+func WithHaving(ctx context.Context, db *gorm.DB, having map[string]interface{}) *gorm.DB {
+	if db == nil {
+		return nil
+	}
+
+	for k, v := range having {
+		db.Having(k, v)
+	}
+
+	return db
+}
+
 // FormatEq
 func FormatEq(v interface{}) string {
 	return fmt.Sprintf("%s = ?", v)
