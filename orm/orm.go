@@ -23,7 +23,7 @@ func Count(ctx context.Context, db *gorm.DB, model interface{}, where map[string
 	db = db.WithContext(ctx).Model(model)
 
 	for k, v := range where {
-		db.Where(k, v)
+		db = db.Where(k, v)
 	}
 
 	err = db.Count(&count).Error
@@ -41,19 +41,19 @@ func Select(ctx context.Context, db *gorm.DB, model interface{}, fields string, 
 	db = db.WithContext(ctx).Model(model).Select(fields)
 
 	for k, v := range where {
-		db.Where(k, v)
+		db = db.Where(k, v)
 	}
 
 	for _, v := range group {
-		db.Group(v)
+		db = db.Group(v)
 	}
 
 	for k, v := range having {
-		db.Having(k, v)
+		db = db.Having(k, v)
 	}
 
 	for _, v := range order {
-		db.Order(v)
+		db = db.Order(v)
 	}
 
 	db = db.Offset(start).Limit(limit)
@@ -76,7 +76,7 @@ func Update(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 	db = db.WithContext(ctx).Model(model)
 
 	for k, v := range where {
-		db.Where(k, v)
+		db = db.Where(k, v)
 	}
 
 	res := db.Updates(updates)
@@ -104,7 +104,7 @@ func Delete(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 	db = db.WithContext(ctx)
 
 	for k, v := range where {
-		db.Where(k, v)
+		db = db.Where(k, v)
 	}
 
 	res := db.Delete(model)
@@ -120,7 +120,7 @@ func WithWhere(ctx context.Context, db *gorm.DB, where map[string]interface{}) *
 	db = db.WithContext(ctx)
 
 	for k, v := range where {
-		db.Where(k, v)
+		db = db.Where(k, v)
 	}
 
 	return db
@@ -134,7 +134,7 @@ func WithOrder(ctx context.Context, db *gorm.DB, order []string) *gorm.DB {
 	db = db.WithContext(ctx)
 
 	for k, v := range order {
-		db.Having(k, v)
+		db = db.Having(k, v)
 	}
 
 	return db
@@ -148,7 +148,7 @@ func WithHaving(ctx context.Context, db *gorm.DB, having map[string]interface{})
 	db = db.WithContext(ctx)
 
 	for k, v := range having {
-		db.Having(k, v)
+		db = db.Having(k, v)
 	}
 
 	return db
