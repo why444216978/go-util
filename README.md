@@ -4,11 +4,5 @@
 
 有疑问随时联系本人
 <br>
-QQ群：909211071
-<br>
-个人QQ：444216978
-<br>
-微信：AbleYu_
-<br>
-
+<img src="https://github.com/why444216978/images/blob/master/qrcode.png" width="300" height="100" alt="图片描述文字"/>
 
