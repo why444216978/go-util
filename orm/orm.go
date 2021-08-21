@@ -20,7 +20,7 @@ func Count(ctx context.Context, db *gorm.DB, model interface{}, where map[string
 		return
 	}
 
-	db = db.Model(model)
+	db = db.WithContext(ctx).Model(model)
 
 	for k, v := range where {
 		db.Where(k, v)
@@ -38,7 +38,7 @@ func Select(ctx context.Context, db *gorm.DB, model interface{}, fields string, 
 		return
 	}
 
-	db = db.Model(model).Select(fields)
+	db = db.WithContext(ctx).Model(model).Select(fields)
 
 	for k, v := range where {
 		db.Where(k, v)
@@ -73,7 +73,7 @@ func Update(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 		return 0, ErrDBNil
 	}
 
-	db = db.Model(model)
+	db = db.WithContext(ctx).Model(model)
 
 	for k, v := range where {
 		db.Where(k, v)
@@ -86,7 +86,11 @@ func Update(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 
 // Insert 插入
 func Insert(ctx context.Context, db *gorm.DB, model interface{}) (int64, error) {
-	res := db.Create(model)
+	if db == nil {
+		return 0, ErrDBNil
+	}
+
+	res := db.WithContext(ctx).Create(model)
 
 	return res.RowsAffected, res.Error
 }
@@ -96,6 +100,8 @@ func Delete(ctx context.Context, db *gorm.DB, model interface{}, where map[strin
 	if db == nil {
 		return 0, ErrDBNil
 	}
+
+	db = db.WithContext(ctx)
 
 	for k, v := range where {
 		db.Where(k, v)
@@ -111,6 +117,8 @@ func WithWhere(ctx context.Context, db *gorm.DB, where map[string]interface{}) *
 		return nil
 	}
 
+	db = db.WithContext(ctx)
+
 	for k, v := range where {
 		db.Where(k, v)
 	}
@@ -123,6 +131,8 @@ func WithOrder(ctx context.Context, db *gorm.DB, order []string) *gorm.DB {
 		return nil
 	}
 
+	db = db.WithContext(ctx)
+
 	for k, v := range order {
 		db.Having(k, v)
 	}
@@ -134,6 +144,8 @@ func WithHaving(ctx context.Context, db *gorm.DB, having map[string]interface{})
 	if db == nil {
 		return nil
 	}
+
+	db = db.WithContext(ctx)
 
 	for k, v := range having {
 		db.Having(k, v)
