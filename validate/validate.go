@@ -1,8 +1,8 @@
 package validate
 
 import (
-	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	util_str "github.com/why444216978/go-util/string"
@@ -14,7 +14,7 @@ func init() {
 	validate = validator.New()
 }
 
-// Validate example
+// Validate is validate snake params
 // type Data struct {
 // 	TpPrescriptionCode string   `json:"tp_prescription_code" validate:"required,min=1,max=32"`
 // 	PrescriptionType   uint8    `json:"prescription_type" validate:"required,oneof=1 2"`
@@ -40,13 +40,13 @@ func Validate(val interface{}) error {
 
 	for _, err := range err.(validator.ValidationErrors) {
 		field := util_str.CamelToSnake(err.Field())
-		return errors.New(fmt.Sprintf("param %s must %s %s", field, err.Tag(), err.Param()))
-
+		return fmt.Errorf("param %s must %s %s", field, err.Tag(), err.Param())
 	}
+
 	return nil
 }
 
-// ValidateCamel 校验驼峰命名参数
+// ValidateCamel is validate camel params
 func ValidateCamel(val interface{}) error {
 	err := validate.Struct(val)
 	if err == nil {
@@ -55,7 +55,38 @@ func ValidateCamel(val interface{}) error {
 
 	for _, err := range err.(validator.ValidationErrors) {
 		field := util_str.LcFirst(err.Field())
-		return errors.New(fmt.Sprintf("param %s must %s %s", field, err.Tag(), err.Param()))
+		return fmt.Errorf("param %s must %s %s", field, err.Tag(), err.Param())
 	}
+
+	return nil
+}
+
+// ValidateLower is validate lower case params
+func ValidateLower(val interface{}) error {
+	err := validate.Struct(val)
+	if err == nil {
+		return nil
+	}
+
+	for _, err := range err.(validator.ValidationErrors) {
+		field := strings.ToLower(err.Field())
+		return fmt.Errorf("param %s must %s %s", field, err.Tag(), err.Param())
+	}
+
+	return nil
+}
+
+// ValidateUpper is validate upper case params
+func ValidateUpper(val interface{}) error {
+	err := validate.Struct(val)
+	if err == nil {
+		return nil
+	}
+
+	for _, err := range err.(validator.ValidationErrors) {
+		field := strings.ToUpper(err.Field())
+		return fmt.Errorf("param %s must %s %s", field, err.Tag(), err.Param())
+	}
+
 	return nil
 }
