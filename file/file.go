@@ -2,10 +2,12 @@ package file
 
 import (
 	"bufio"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"syscall"
@@ -156,4 +158,40 @@ func CleanFile(filePath string) error {
 
 	_, err = f.WriteString("")
 	return err
+}
+
+// DownloadFileToBase64 通过url下载文件并转为base64
+func DownloadFileToBase64(url string) (string, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	// 读取获取的[]byte数据
+	bytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	data := base64.StdEncoding.EncodeToString(bytes)
+
+	return data, nil
+}
+
+// Base64ToFile base64写入文件
+func Base64ToFile(data []byte, file string) (err error) {
+	decodeData, err := base64.StdEncoding.DecodeString(string(data))
+	if err != nil {
+		return
+	}
+
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	_, err = f.Write(decodeData)
+
+	return
 }

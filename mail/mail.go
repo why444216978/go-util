@@ -1,24 +1,23 @@
 package mail
 
 import (
-	"fmt"
 	"strings"
 
 	"gopkg.in/gomail.v2"
 )
 
-const (
-	HOST = "xxx"
+var (
+	HOST = ""
 	PORT = 465
 	PASS = ""
 )
 
 type Options struct {
-	MailUser   string // 发件人
-	MailTo     string // 收件人 多个用,分割
-	Subject    string // 邮件主题
-	Body       string // 邮件内容
-	MailAttach []string
+	MailUser   string   // 发件人
+	MailTo     string   // 收件人 多个用,分割
+	Subject    string   // 邮件主题
+	Body       string   // 邮件内容
+	MailAttach []string // 附件地址
 }
 
 // NewMail 返回新的邮件配置
@@ -58,9 +57,5 @@ func Send(o *Options) error {
 
 	d := gomail.NewDialer(HOST, PORT, o.MailUser, PASS)
 
-	err := d.DialAndSend(m)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return err
+	return d.DialAndSend(m)
 }
