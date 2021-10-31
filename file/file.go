@@ -55,31 +55,31 @@ func ReadFile(dir string) (string, error) {
 	return string(data), nil
 }
 
-//ReadFileLine  按行读取文件
-func ReadFileLine(dir string) (map[int]string, error) {
-	file, err := os.OpenFile(dir, os.O_RDWR, 0666)
+// ReadFileLine 按行读取字典文件
+func ReadFileLine(dir string) ([]string, error) {
+	file, err := os.OpenFile(dir, os.O_RDONLY, 0444)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	/* stat, err := file.Stat()
-	util_err.Must(err)
-	size := stat.Size */
+	_, err = file.Stat()
+	if err != nil {
+		return nil, err
+	}
 
 	buf := bufio.NewReader(file)
-	res := make(map[int]string)
-	i := 0
+	res := make([]string, 0)
 	for {
 		line, _, err := buf.ReadLine()
-		context := string(line)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
+		s := string(line)
+		if err == io.EOF {
+			break
 		}
-		res[i] = context
-		i++
+		if err != nil {
+			continue
+		}
+		res = append(res, s)
 	}
 	return res, nil
 }
