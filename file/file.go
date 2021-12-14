@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"syscall"
 )
 
@@ -33,9 +32,8 @@ func WriteWithIo(filePath, content string) error {
 }
 
 // ReadLimit 读取指定字节
-func ReadLimit(str string, len int64) string {
-	reader := strings.NewReader(str)
-	limitReader := &io.LimitedReader{R: reader, N: len}
+func ReadLimit(r io.Reader, len int64) string {
+	limitReader := &io.LimitedReader{R: r, N: len}
 
 	var res string
 	for limitReader.N > 0 {
