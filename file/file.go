@@ -72,15 +72,30 @@ func ReadFileLine(dir string) ([]string, error) {
 	res := make([]string, 0)
 	for {
 		line, _, err := buf.ReadLine()
-		s := string(line)
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			continue
+			return res, err
 		}
-		res = append(res, s)
+		res = append(res, string(line))
 	}
+	return res, nil
+}
+
+// ReadFromReader 按行读取io.Reader
+func ReadFromReader(r io.Reader) ([]string, error) {
+	var res []string
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		res = append(res, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return res, err
+	}
+
 	return res, nil
 }
 
