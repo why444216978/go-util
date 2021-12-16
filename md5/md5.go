@@ -1,12 +1,15 @@
 package md5
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"io"
 )
 
 func MD5(str string) string {
-	s := md5.New()
-	s.Write([]byte(str))
-	return hex.EncodeToString(s.Sum(nil))
+	h := md5.New()
+	r := bytes.NewBufferString(str)
+	_, _ = io.Copy(h, r)
+	return hex.EncodeToString(h.Sum(nil))
 }
