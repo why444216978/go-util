@@ -208,3 +208,9 @@ func Base64ToFile(data []byte, file string) (err error) {
 
 	return
 }
+
+// MultiWriter 多路io.Writer
+func MultiWriter(src io.Reader, dst ...io.Writer) (written int64, err error) {
+	w := io.MultiWriter(dst...)
+	return io.Copy(w, src)
+}

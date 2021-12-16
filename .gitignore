@@ -1,4 +1,3 @@
-
 .svn
 .svn/*
 *.swp
@@ -7,14 +6,13 @@
 *.tmp
 *.swm
 logs/*
+log/*
 development
 .tags*
 .idea
 .vscode
 *node*
 .DS_Store
-test/*
-test.go
-configs/*
-go.sum
+__debug_bin
 cover.out
+cover.html

@@ -83,3 +83,7 @@ func TestDownloadFileToBase64(t *testing.T) {
 func TestBase64ToFile(t *testing.T) {
 
 }
+
+func TestMultiWriter(t *testing.T) {
+
+}
