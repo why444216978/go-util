@@ -4,44 +4,62 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"encoding/base64"
 )
 
-//  Encrypt 加密 aes_128_cbc
-func Encrypt(encryptStr string, key []byte, iv string) (string, error) {
-	encryptBytes := []byte(encryptStr)
+// DecryptECB AES-ECB-256加密
+func EncryptECB(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	blockSize := block.BlockSize()
-	encryptBytes = pkcs5Padding(encryptBytes, blockSize)
-
-	blockMode := cipher.NewCBCEncrypter(block, []byte(iv))
-	encrypted := make([]byte, len(encryptBytes))
-	blockMode.CryptBlocks(encrypted, encryptBytes)
-	return base64.URLEncoding.EncodeToString(encrypted), nil
+	data = pkcs5Padding(data, blockSize)
+	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
+	encrypted := make([]byte, len(data))
+	blockMode.CryptBlocks(encrypted, data)
+	return encrypted, nil
 }
 
-// Decrypt 解密
-func Decrypt(decryptStr string, key []byte, iv string) (string, error) {
-	decryptBytes, err := base64.URLEncoding.DecodeString(decryptStr)
-	if err != nil {
-		return "", err
-	}
-
+// DecryptECB AES-ECB-256解谜
+func DecryptECB(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	blockMode := cipher.NewCBCDecrypter(block, []byte(iv))
-	decrypted := make([]byte, len(decryptBytes))
-
-	blockMode.CryptBlocks(decrypted, decryptBytes)
+	blockSize := block.BlockSize()
+	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
+	decrypted := make([]byte, len(data))
+	blockMode.CryptBlocks(decrypted, data)
 	decrypted = pkcs5UnPadding(decrypted)
-	return string(decrypted), nil
+	return decrypted, nil
+}
+
+func EncryptCBC(data, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	blockSize := block.BlockSize()
+	data = pkcs5Padding(data, blockSize)
+	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
+	encrypted := make([]byte, len(data))
+	blockMode.CryptBlocks(encrypted, data)
+	return encrypted, nil
+}
+
+func DecryptCBC(data, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	blockSize := block.BlockSize()
+	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
+	decrypted := make([]byte, len(data))
+	blockMode.CryptBlocks(decrypted, data)
+	decrypted = pkcs5UnPadding(decrypted)
+	return decrypted, nil
 }
 
 func pkcs5Padding(cipherText []byte, blockSize int) []byte {
