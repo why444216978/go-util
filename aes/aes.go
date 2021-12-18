@@ -6,7 +6,7 @@ import (
 	"crypto/cipher"
 )
 
-// DecryptECB AES-ECB-256加密
+// DecryptECB AES-ECB 加密
 func EncryptECB(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -21,7 +21,7 @@ func EncryptECB(data, key []byte) ([]byte, error) {
 	return encrypted, nil
 }
 
-// DecryptECB AES-ECB-256解谜
+// DecryptECB AES-ECB 解密
 func DecryptECB(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -36,6 +36,7 @@ func DecryptECB(data, key []byte) ([]byte, error) {
 	return decrypted, nil
 }
 
+// EncryptCBC AES-CBC 加密
 func EncryptCBC(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -49,6 +50,7 @@ func EncryptCBC(data, key []byte) ([]byte, error) {
 	return encrypted, nil
 }
 
+// DecryptCBC AES-CBC 解密
 func DecryptCBC(data, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
