@@ -3,13 +3,14 @@ package http
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/why444216978/go-util/validate"
 )
 
 type Response struct {
@@ -51,7 +52,7 @@ func Send(ctx context.Context, method, url string, header map[string]string, bod
 
 	ret.HTTPCode = resp.StatusCode
 	if resp.StatusCode != http.StatusOK {
-		err = errors.New(fmt.Sprintf("http code is %d", resp.StatusCode))
+		err = errors.Errorf("http code is %d", resp.StatusCode)
 		return
 	}
 
@@ -69,4 +70,16 @@ func ExtractBody(req http.Request) string {
 	req.Body = ioutil.NopCloser(&buf)
 
 	return buf.String()
+}
+
+// ParseAndValidateBody 解析并校验http.Request.Body
+func ParseAndValidateBody(req *http.Request, target interface{}) error {
+	if err := json.NewDecoder(req.Body).Decode(target); err != nil {
+		return err
+	}
+	if err := validate.Validate(target); err != nil {
+		return err
+	}
+
+	return nil
 }
