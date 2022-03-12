@@ -26,18 +26,18 @@ func Send(ctx context.Context, method, url string, header map[string]string, bod
 		Timeout:   timeout,
 	}
 
-	//构建req
+	// 构建req
 	req, err = http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return
 	}
 
-	//设置请求header
+	// 设置请求header
 	for k, v := range header {
 		req.Header.Add(k, v)
 	}
 
-	//发送请求
+	// 发送请求
 	resp, err := client.Do(req)
 	if err != nil {
 		return
@@ -62,11 +62,14 @@ func Send(ctx context.Context, method, url string, header map[string]string, bod
 	return
 }
 
-// ExtractBoy 解析请求body并回写
-func ExtractBody(req http.Request) string {
+// ExtractBody 解析请求body并回写
+func ExtractBody(req http.Request) (string, error) {
 	var buf bytes.Buffer
-	buf.ReadFrom(req.Body)
+	_, err := buf.ReadFrom(req.Body)
+	if err != nil {
+		return "", err
+	}
 	req.Body = ioutil.NopCloser(&buf)
 
-	return buf.String()
+	return buf.String(), nil
 }

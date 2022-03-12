@@ -29,9 +29,6 @@ func init() {
 // }
 // data := Data{}
 // err = Validate(data)
-// if err != nil {
-// 	fmt.Println(err.Error())
-// }
 func Validate(val interface{}) error {
 	err := validate.Struct(val)
 	if err == nil {

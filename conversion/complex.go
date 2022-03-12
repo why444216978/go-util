@@ -39,18 +39,6 @@ func JsonEncode(v interface{}) (string, error) {
 	return string(b), err
 }
 
-// MapToJsonInt key为int的map转json
-func MapToJsonInt(data map[int]interface{}) (string, error) {
-	jsonStr, err := json.Marshal(data)
-	return string(jsonStr), err
-}
-
-// MapToJson key为string的map转json
-func MapToJson(data map[string]interface{}) (string, error) {
-	jsonStr, err := json.Marshal(data)
-	return string(jsonStr), err
-}
-
 // JsonToMapArray json转map数组
 func JsonToMapArray(data string) ([]map[string]interface{}, error) {
 	res := make([]map[string]interface{}, 0)

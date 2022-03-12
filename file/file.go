@@ -3,7 +3,6 @@ package file
 import (
 	"bufio"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -25,7 +24,6 @@ func WriteWithIo(filePath, content string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("Successful appending to the file with os.OpenFile and io.WriteString.", content)
 	}
 
 	return nil
@@ -130,7 +128,6 @@ func GetFileStat(file *os.File) *syscall.Stat_t {
 	fileInfo := GetFileInfo(file)
 	sysInterface := fileInfo.Sys()
 	sys := sysInterface.(*syscall.Stat_t)
-	//fmt.Println(sys.Atimespec)
 	return sys
 }
 

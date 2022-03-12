@@ -11,11 +11,11 @@ import (
 )
 
 // SubStr 截取字符串，并返回实际截取的长度和子串
-func SubStr(str string, start, end int64) (int64, string, error) {
+func SubStr(str string, start, length int64) (int64, string, error) {
 	reader := strings.NewReader(str)
 
 	// Calling NewSectionReader method with its parameters
-	r := io.NewSectionReader(reader, start, end)
+	r := io.NewSectionReader(reader, start, length)
 
 	// Calling Copy method with its parameters
 	var buf bytes.Buffer
@@ -61,7 +61,6 @@ func Utf8Index(str, substr string) int {
 }
 
 // JoinStringAndOther 连接字符串和其他类型
-// fmt.Println(JoinStringAndOther("why", 123))
 func JoinStringAndOther(val ...interface{}) string {
 	return fmt.Sprint(val...)
 }
@@ -75,7 +74,7 @@ func CamelToSnake(s string) string {
 		d := s[i]
 		// or通过ASCII码进行大小写的转化
 		// 65-90（A-Z），97-122（a-z）
-		//判断如果字母为大写的A-Z就在前面拼接一个_
+		// 判断如果字母为大写的A-Z就在前面拼接一个_
 		if i > 0 && d >= 'A' && d <= 'Z' && j {
 			data = append(data, '_')
 		}
@@ -84,7 +83,7 @@ func CamelToSnake(s string) string {
 		}
 		data = append(data, d)
 	}
-	//ToLower把大写字母统一转小写
+	// ToLower把大写字母统一转小写
 	return strings.ToLower(string(data[:]))
 }
 
@@ -112,7 +111,6 @@ func SnakeToCamel(s string) string {
 	}
 	return string(data[:])
 }
-
 
 // UcFirst 首字母大写
 func UcFirst(str string) string {

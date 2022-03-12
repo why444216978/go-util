@@ -1,7 +1,6 @@
 package dir
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -12,11 +11,11 @@ import (
 
 // GetCurrentDirectory 获得当前绝对路径
 func GetCurrentDirectory() string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0])) //返回绝对路径  filepath.Dir(os.Args[0])去除最后一个元素的路径
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0])) // 返回绝对路径  filepath.Dir(os.Args[0])去除最后一个元素的路径
 	if err != nil {
 		log.Fatal(err)
 	}
-	return strings.Replace(dir, "\\", "/", -1) //将\替换成/
+	return strings.Replace(dir, "\\", "/", -1) // 将\替换成/
 }
 
 // LeftAddPathPos 检测并补全路径左边的反斜杠
@@ -46,7 +45,7 @@ func FileNameByDate(dir string) string {
 func CreateDir(folderPath string) {
 	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
 		// 必须分成两步：先创建文件夹、再修改权限
-		os.MkdirAll(folderPath, 0777) //0777也可以os.ModePerm
+		os.MkdirAll(folderPath, 0777) // 0777也可以os.ModePerm
 		os.Chmod(folderPath, 0777)
 	}
 }
@@ -60,7 +59,7 @@ func CreateDateDir(path string, prex string) string {
 	folderPath := filepath.Join(path, folderName)
 	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
 		// 必须分成两步：先创建文件夹、再修改权限
-		os.MkdirAll(folderPath, 0777) //0777也可以os.ModePerm
+		os.MkdirAll(folderPath, 0777) // 0777也可以os.ModePerm
 		os.Chmod(folderPath, 0777)
 	}
 	return folderPath
@@ -78,10 +77,9 @@ func CreateHourLogFile(path string, prex string) string {
 		folderName = prex + folderName
 	}
 	folderPath := filepath.Join(path, folderName)
-	fmt.Println(folderPath)
 	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
 		// 必须分成两步：先创建文件夹、再修改权限
-		os.MkdirAll(folderPath, 0777) //0777也可以os.ModePerm
+		os.MkdirAll(folderPath, 0777) // 0777也可以os.ModePerm
 		os.Chmod(folderPath, 0777)
 	}
 	return folderPath
@@ -89,25 +87,26 @@ func CreateHourLogFile(path string, prex string) string {
 
 // ReadDirAll 读取目录
 // example ReadDirAll("/Users/why/Desktop/go/test", 0)
-func ReadDirAll(path string, curHier int) {
+func ReadDirAll(path string, curHier int) ([]string, error) {
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return nil, err
 	}
 
+	ret := []string{}
 	for _, info := range fileInfos {
 		if info.IsDir() {
 			for tmpHier := curHier; tmpHier > 0; tmpHier-- {
-				fmt.Printf("|\t")
+				ret = append(ret, "|\t")
 			}
-			fmt.Println(info.Name(), "\\")
+			ret = append(ret, info.Name()+"\\")
 			ReadDirAll(path+"/"+info.Name(), curHier+1)
 		} else {
 			for tmpHier := curHier; tmpHier > 0; tmpHier-- {
-				fmt.Printf("|\t")
+				ret = append(ret, "|\t")
 			}
-			fmt.Println(info.Name())
+			ret = append(ret, info.Name())
 		}
 	}
+	return ret, nil
 }

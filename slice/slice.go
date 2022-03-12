@@ -3,22 +3,21 @@ package slice
 import (
 	"errors"
 	"reflect"
-	"sort"
 )
 
-//切片快捷操作汇总：
-//a := []int{1, 2, 3}
-//b := []int{4, 5, 6}
-//i := 1
-//j := 3
-//1.将切片 b 的元素追加到切片 a 之后：a = append(a, b...)
-//2.删除位于索引 i 的元素：a = append(a[:i], a[i+1:]...)
-//3.切除切片 a 中从索引 i 至 j 位置的元素：a = append(a[:i], a[j:]...)
-//4.为切片 a 扩展 j 个元素长度：a = append(a, make([]int, j)...)
-//5.在索引 i 的位置插入元素 x：a = append(a[:i], append([]T{x}, a[i:]...)...)
-//6.在索引 i 的位置插入长度为 j 的新切片：a = append(a[:i], append(make([]int, j), a[i:]...)...)
-//7.在索引 i 的位置插入切片 b 的所有元素：a = append(a[:i], append(b, a[i:]...)...)
-//8.取出位于切片 a 最末尾的元素 x：x, a := a[len(a)-1:], a[:len(a)-1]
+// 切片快捷操作汇总：
+// a := []int{1, 2, 3}
+// b := []int{4, 5, 6}
+// i := 1
+// j := 3
+// 1.将切片 b 的元素追加到切片 a 之后：a = append(a, b...)
+// 2.删除位于索引 i 的元素：a = append(a[:i], a[i+1:]...)
+// 3.切除切片 a 中从索引 i 至 j 位置的元素：a = append(a[:i], a[j:]...)
+// 4.为切片 a 扩展 j 个元素长度：a = append(a, make([]int, j)...)
+// 5.在索引 i 的位置插入元素 x：a = append(a[:i], append([]T{x}, a[i:]...)...)
+// 6.在索引 i 的位置插入长度为 j 的新切片：a = append(a[:i], append(make([]int, j), a[i:]...)...)
+// 7.在索引 i 的位置插入切片 b 的所有元素：a = append(a[:i], append(b, a[i:]...)...)
+// 8.取出位于切片 a 最末尾的元素 x：x, a := a[len(a)-1:], a[:len(a)-1]
 
 // DeleteSliceByPos 删除切片指定位置元素
 func DeleteSliceByPos(slice interface{}, index int) (interface{}, error) {
@@ -176,58 +175,25 @@ func UniqueString(s []string) []string {
 }
 
 // SumInt64 int64切片求和
-func SumInt64(intslice []int64) (sum int64) {
-	for _, v := range intslice {
+func SumInt64(intSlice []int64) (sum int64) {
+	for _, v := range intSlice {
 		sum += v
 	}
 	return
 }
 
 // SumInt int切片求和
-func SumInt(intslice []int) (sum int) {
-	for _, v := range intslice {
+func SumInt(intSlice []int) (sum int) {
+	for _, v := range intSlice {
 		sum += v
 	}
 	return
 }
 
 // SumFloat64 float64切片求和
-func SumFloat64(intslice []float64) (sum float64) {
-	for _, v := range intslice {
+func SumFloat64(intSlice []float64) (sum float64) {
+	for _, v := range intSlice {
 		sum += v
 	}
 	return
 }
-
-// DescByField 根据切片中map的指定字段降序排序
-func DescByField(list []map[string]interface{}, field string) {
-	sort.Slice(list, func(i, j int) bool {
-		return list[i][field].(int64) > list[j][field].(int64)
-	})
-}
-
-// AscByField 根据切片中map的指定字段升序排序
-func AscByField(list []map[string]interface{}, field string) {
-	sort.Slice(list, func(i, j int) bool {
-		return list[i][field].(int64) < list[j][field].(int64)
-	})
-}
-
-// 备忘：切片指定位置插入和删除原理
-// func sliceInsertAndDelete() {
-// 	//insert
-// 	data := []int{1, 2, 3, 4, 5}
-// 	left := data[:3]
-// 	right := data[3:]
-// 	tmp := append([]int{}, left...)
-// 	tmp = append(tmp, 0)
-// 	res := append(tmp, right...)
-// 	fmt.Println(res)
-
-// 	//delete
-// 	data = []int{1, 2, 3, 4, 5}
-// 	left = data[:3]
-// 	right = data[3+1:]
-// 	res = append(left, right...)
-// 	fmt.Println(res)
-// }

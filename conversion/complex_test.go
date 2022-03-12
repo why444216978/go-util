@@ -113,68 +113,6 @@ func TestJsonEncode(t *testing.T) {
 	}
 }
 
-func TestMapToJsonInt(t *testing.T) {
-	type args struct {
-		data map[int]interface{}
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			name:    "test success",
-			args:    args{data: map[int]interface{}{1: "golang"}},
-			wantErr: false,
-		},
-		{
-			name:    "test error",
-			args:    args{data: nil},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, err := MapToJsonInt(tt.args.data)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("MapToJsonInt() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-		})
-	}
-}
-
-func TestMapToJson(t *testing.T) {
-	type args struct {
-		data map[string]interface{}
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			name:    "test success",
-			args:    args{data: map[string]interface{}{"key": "golang"}},
-			wantErr: false,
-		},
-		{
-			name:    "test error",
-			args:    args{data: nil},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, err := MapToJson(tt.args.data)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("MapToJson() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-		})
-	}
-}
-
 func TestJsonToMapArray(t *testing.T) {
 	type args struct {
 		data string
