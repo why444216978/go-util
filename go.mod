@@ -1,10 +1,10 @@
 module github.com/why444216978/go-util
 
-go 1.13
+go 1.16
 
 require (
-	github.com/bwmarrin/snowflake v0.3.0 // indirect
-	github.com/go-playground/validator/v10 v10.4.1
+	github.com/bwmarrin/snowflake v0.3.0
+	github.com/go-playground/validator/v10 v10.10.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.1.5
 	github.com/json-iterator/go v1.1.12
