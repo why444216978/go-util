@@ -4,9 +4,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // GetCurrentDirectory 获得当前绝对路径
@@ -109,4 +112,29 @@ func ReadDirAll(path string, curHier int) ([]string, error) {
 		}
 	}
 	return ret, nil
+}
+
+type FileInfo struct {
+	Path      string
+	Base      string
+	BaseNoExt string
+	Ext       string
+	ExtNoSpot string
+}
+
+// GetPathInfo 获得路径信息
+func GetPathInfo(f string) (info FileInfo, err error) {
+	info.Path = f
+	f = path.Base(filepath.ToSlash(f))
+	info.Base = f
+	ext := path.Ext(f)
+	info.Ext = ext
+	if ext == "" {
+		err = errors.New("ext error")
+		return
+	}
+	info.ExtNoSpot = ext[1:]
+	info.BaseNoExt = strings.TrimSuffix(f, ext)
+
+	return
 }
