@@ -75,14 +75,31 @@ func ExtractBody(req http.Request) (string, error) {
 	return buf.String(), nil
 }
 
+type ParamType string
+
+const (
+	ParamTypeSnake ParamType = "snake"
+	ParamTypeCamel ParamType = "camel"
+	ParamTypeLower ParamType = "lower"
+	ParamTypeUpper ParamType = "upper"
+)
+
 // ParseAndValidateBody 解析并校验http.Request.Body
-func ParseAndValidateBody(req *http.Request, target interface{}) error {
+func ParseAndValidateBody(req *http.Request, target interface{}, t ParamType) error {
 	if err := json.NewDecoder(req.Body).Decode(target); err != nil {
 		return err
 	}
-	if err := validate.Validate(target); err != nil {
-		return err
+
+	switch t {
+	case ParamTypeSnake:
+		return validate.Validate(target)
+	case ParamTypeCamel:
+		return validate.ValidateCamel(target)
+	case ParamTypeLower:
+		return validate.ValidateLower(target)
+	case ParamTypeUpper:
+		return validate.ValidateUpper(target)
 	}
 
-	return nil
+	return errors.New("type error")
 }
