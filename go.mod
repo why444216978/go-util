@@ -3,11 +3,14 @@ module github.com/why444216978/go-util
 go 1.16
 
 require (
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/go-playground/validator/v10 v10.10.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.1.5
 	github.com/json-iterator/go v1.1.12
+	github.com/ledongthuc/pdf v0.0.0-20210621053716-e28cb8259002 // indirect
+	github.com/pdfcpu/pdfcpu v0.3.13 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/smartystreets/goconvey v1.7.2
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect

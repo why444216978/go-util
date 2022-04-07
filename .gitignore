@@ -14,5 +14,10 @@ development
 *node*
 .DS_Store
 __debug_bin
+
 cover.out
 cover.html
+
+*.pdf
+wkhtmltopdf*
+wkhtmltox*
