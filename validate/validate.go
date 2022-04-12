@@ -56,5 +56,10 @@ func wrapErr(val interface{}, err validator.FieldError) error {
 		return errors.Errorf("param %s must %s %s", err.Field(), err.Tag(), err.Param())
 	}
 
-	return errors.Errorf("%s:%s", f.Tag.Get(customDataTag), f.Tag.Get(customErrTag))
+	errTag := f.Tag.Get(customErrTag)
+	if errTag == "" {
+		return errors.Errorf("param %s must %s %s", f.Tag.Get(customDataTag), err.Tag(), err.Param())
+	}
+
+	return errors.Errorf("%s:%s", f.Tag.Get(customDataTag), errTag)
 }
