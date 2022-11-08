@@ -9,9 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	ErrDBNil = errors.New("db is nil")
-)
+var ErrDBNil = errors.New("db is nil")
 
 // Count 数量
 func Count(ctx context.Context, db *gorm.DB, model interface{}, where map[string]interface{}) (count int64, err error) {
@@ -291,7 +289,16 @@ func FormatNotInList(m map[string]interface{}) map[string]interface{} {
 }
 
 // ExtractError extract gorm error to judge db error
-func ExtractError(err error) (mysqlErr *mysql.MySQLError) {
-	errors.As(err, &mysqlErr)
+func ExtractError(err error) (mysqlErr *mysql.MySQLError, ok bool) {
+	mysqlErr = &mysql.MySQLError{}
+	ok = errors.As(err, &mysqlErr)
 	return
+}
+
+func CheckDuplicate(err error) bool {
+	e, ok := ExtractError(err)
+	if ok && e.Message == "1062" {
+		return true
+	}
+	return false
 }
