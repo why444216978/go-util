@@ -297,7 +297,7 @@ func ExtractError(err error) (mysqlErr *mysql.MySQLError, ok bool) {
 
 func CheckDuplicate(err error) bool {
 	e, ok := ExtractError(err)
-	if ok && e.Message == "1062" {
+	if ok && e.Number == uint16(1062) {
 		return true
 	}
 	return false
