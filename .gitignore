@@ -15,8 +15,8 @@ development
 .DS_Store
 __debug_bin
 
-cover.out
-cover.html
+cover.*
+cover.*
 
 *.pdf
 wkhtmltopdf*
