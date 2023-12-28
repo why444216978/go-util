@@ -7,7 +7,7 @@ import (
 )
 
 func WrapStackError(v interface{}) *StackError {
-	return newStackError(v, 2)
+	return newStackError(v, 3)
 }
 
 func WrapStackErrorSkip(v interface{}, skip int) *StackError {
