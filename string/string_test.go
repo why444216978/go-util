@@ -18,3 +18,23 @@ func TestSubStr(t *testing.T) {
 		})
 	})
 }
+
+func TestSplitString(t *testing.T) {
+	content := "第一段。第二段?第三段？第四段.第五段!第六段？今天吃什么，随便吧。"
+
+	res := SplitPunctuation(content, 10)
+	assert.Equal(t, []string{
+		"第一段。第二段?",
+		"第三段？第四段.",
+		"第五段!第六段？",
+		"今天吃什么，随便吧。",
+	}, res)
+
+	res = ReverseSplitPunctuation(content, 10)
+	assert.Equal(t, []string{
+		"第一段。第二段?",
+		"第三段？第四段.",
+		"第五段!第六段？",
+		"今天吃什么，随便吧。",
+	}, res)
+}

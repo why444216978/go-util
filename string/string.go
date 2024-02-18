@@ -2,9 +2,11 @@ package string
 
 import (
 	"bytes"
+	"container/list"
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -23,8 +25,8 @@ func SubStr(str string, start, length int64) (int64, string, error) {
 	return n, buf.String(), err
 }
 
-// SubstrTarget 在字符串中查找指定子串，并返回left或right部分
-func SubstrTarget(str string, target string, turn string, hasPos bool) (string, error) {
+// SubStrTarget 在字符串中查找指定子串，并返回left或right部分
+func SubStrTarget(str string, target string, turn string, hasPos bool) (string, error) {
 	pos := strings.Index(str, target)
 
 	if pos == -1 {
@@ -126,4 +128,76 @@ func LcFirst(str string) string {
 		return string(unicode.ToLower(v)) + str[i+1:]
 	}
 	return ""
+}
+
+var splitRegexp = regexp.MustCompile(`([\n。！!？?.])`)
+
+func SplitPunctuation(content string, length int) []string {
+	arr := splitRegexp.Split(content, -1)
+	submatch := splitRegexp.FindAllStringSubmatch(content, -1)
+
+	contents := []string{}
+	for i, s := range submatch {
+		contents = append(contents, arr[i]+s[0])
+	}
+
+	result := []string{}
+	current := ""
+	for _, s := range contents {
+		if current == "" {
+			current = s
+			continue
+		}
+		tmp := current + s
+		if utf8.RuneCountInString(tmp) > length {
+			result = append(result, current)
+			current = s
+			continue
+		}
+		current = tmp
+	}
+
+	if current != "" {
+		result = append(result, current)
+	}
+
+	return result
+}
+
+func ReverseSplitPunctuation(content string, length int) []string {
+	arr := splitRegexp.Split(content, -1)
+	submatch := splitRegexp.FindAllStringSubmatch(content, -1)
+
+	contents := []string{}
+	for i, s := range submatch {
+		contents = append(contents, arr[i]+s[0])
+	}
+
+	l := list.New()
+	current := ""
+	for i := len(contents) - 1; i >= 0; i-- {
+		s := contents[i]
+		if current == "" {
+			current = s
+			continue
+		}
+		tmp := s + current
+		if utf8.RuneCountInString(tmp) > length {
+			l.PushFront(current)
+			current = s
+			continue
+		}
+		current = tmp
+	}
+
+	if current != "" {
+		l.PushFront(current)
+	}
+
+	result := []string{}
+	for i := l.Front(); i != nil; i = i.Next() {
+		result = append(result, i.Value.(string))
+	}
+
+	return result
 }
