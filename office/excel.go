@@ -3,6 +3,7 @@ package office
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 	"io"
 
 	"github.com/h2non/filetype"
@@ -11,7 +12,7 @@ import (
 
 // Read
 // only support csv/xls/xlsx/xlsm/xltx/xltm
-func Read(r io.Reader, fn func([]string)) error {
+func ReadExcel(r io.Reader, fn func([]string, error)) error {
 	var buf bytes.Buffer
 	_, err := io.Copy(&buf, r)
 	if err != nil {
@@ -20,13 +21,14 @@ func Read(r io.Reader, fn func([]string)) error {
 	r = io.NopCloser(&buf)
 
 	if filetype.IsDocument(buf.Bytes()) {
-		return ReadExcel(r, fn)
+		return ReadXLS(r, fn)
 	}
 
-	return ReadCSV(r, fn)
+	ReadCSV(r, fn)
+	return nil
 }
 
-func ReadExcel(r io.Reader, fn func([]string)) error {
+func ReadXLS(r io.Reader, fn func([]string, error)) error {
 	f, err := excelize.OpenReader(r)
 	if err != nil {
 		return err
@@ -39,24 +41,20 @@ func ReadExcel(r io.Reader, fn func([]string)) error {
 	defer rows.Close()
 
 	for rows.Next() {
-		row, err := rows.Columns()
-		if err != nil {
-			continue
-		}
-		fn(row)
+		fn(rows.Columns())
 	}
 
 	return nil
 }
 
-func ReadCSV(r io.Reader, fn func([]string)) error {
+func ReadCSV(r io.Reader, fn func([]string, error)) {
 	cr := csv.NewReader(r)
 	for {
 		row, err := cr.Read()
-		if err == io.EOF {
-			break
+		if errors.Is(err, io.EOF) {
+			fn(nil, nil)
+			return
 		}
-		fn(row)
+		fn(row, err)
 	}
-	return nil
 }

@@ -1,6 +1,10 @@
 package net
 
-import "net"
+import (
+	"context"
+	"errors"
+	"net"
+)
 
 func IsInternalIP(ip net.IP) bool {
 	if ip == nil {
@@ -48,4 +52,18 @@ func isInternalIP6(ip6 net.IP) bool {
 		return true
 	}
 	return false
+}
+
+func LookupIP(ctx context.Context, network, host string) ([]net.IP, error) {
+	if ip := net.ParseIP(host); ip != nil {
+		return []net.IP{ip}, nil
+	}
+
+	return net.DefaultResolver.LookupIP(ctx, network, host)
+}
+
+func DNSError(err error) *net.DNSError {
+	var ge *net.DNSError
+	errors.As(err, &ge)
+	return ge
 }
