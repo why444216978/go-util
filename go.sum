@@ -1,5 +1,7 @@
 github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 h1:LORAatv6KuKheYq8HXehiwx3f/VGuzJBNSydUDQ98EM=
 github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2/go.mod h1:TY8r0gmwEL1c5Lbd66NgQCkL4ZjGDJCMVqvbbFvUx20=
+github.com/alexmullins/zip v0.0.0-20180717182244-4affb64b04d0 h1:BVts5dexXf4i+JX8tXlKT0aKoi38JwTXSe+3WUneX0k=
+github.com/alexmullins/zip v0.0.0-20180717182244-4affb64b04d0/go.mod h1:FDIQmoMNJJl5/k7upZEnGvgWVZfFeE6qHeN7iCMbCsA=
 github.com/aymerick/douceur v0.2.0 h1:Mv+mAeH1Q+n9Fr+oyamOlAkUNPWPlA8PPGR0QAaYuPk=
 github.com/aymerick/douceur v0.2.0/go.mod h1:wlT5vV2O3h55X9m7iVYN0TBM0NH/MmbLnd30/FjWUq4=
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
