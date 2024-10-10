@@ -1,14 +1,18 @@
 package conversion
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 	"unsafe"
+
+	"github.com/spf13/cast"
 )
 
 // StringToByte 自定义string转byte
 // 解决强转内存分配效率低问题
-//	 StringToByte("str")
+//
+//	StringToByte("str")
 func StringToByte(str string) []byte {
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&str))
 	sliceHeader.Cap = sliceHeader.Len
@@ -18,7 +22,8 @@ func StringToByte(str string) []byte {
 
 // ByteToString 自定义byte转string
 // 解决强转效率低：先分配一个内存再复制内容
-//	 ByteToString([]byte("why"))
+//
+//	ByteToString([]byte("why"))
 func ByteToString(b []byte) string {
 	ptr := (*string)(unsafe.Pointer(&b))
 	return *ptr
@@ -190,7 +195,7 @@ func InterfaceFloat64ToInt16(str interface{}) int16 {
 	return int16(tmp)
 }
 
-//InterfaceFloat64ToInt32 interface转int32
+// InterfaceFloat64ToInt32 interface转int32
 func InterfaceFloat64ToInt32(str interface{}) int32 {
 	tmp, ok := str.(float64)
 	if !ok {
@@ -206,4 +211,12 @@ func InterfaceFloat64ToInt64(str interface{}) int64 {
 		return 0
 	}
 	return int64(tmp)
+}
+
+func CustomTypeToInt64(v any) int64 {
+	return cast.ToInt64(fmt.Sprintf("%d", v))
+}
+
+func CustomTypeToString(v any) string {
+	return cast.ToString(fmt.Sprintf("%s", v))
 }

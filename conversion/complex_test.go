@@ -241,46 +241,36 @@ func TestStructToMap(t *testing.T) {
 		name     string
 		args     args
 		wantData map[string]interface{}
-		wantErr  bool
 	}{
 		{
 			name:     "test success",
 			args:     args{obj: User{Name: "golang"}},
 			wantData: map[string]interface{}{"name": "golang"},
-			wantErr:  false,
 		},
 		{
 			name:     "test success no json tag",
 			args:     args{obj: UserNoJSON{Name: "golang"}},
 			wantData: map[string]interface{}{"name": "golang"},
-			wantErr:  false,
 		},
 		{
 			name:     "test nil",
 			args:     args{obj: nil},
 			wantData: map[string]interface{}{},
-			wantErr:  true,
 		},
 		{
 			name:     "test string",
 			args:     args{obj: "a"},
 			wantData: map[string]interface{}{},
-			wantErr:  true,
 		},
 		{
 			name:     "test int",
 			args:     args{obj: 6},
 			wantData: map[string]interface{}{},
-			wantErr:  true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotData, err := StructToMap(tt.args.obj)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("StructToMap() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			gotData := StructToMap(tt.args.obj)
 			if !reflect.DeepEqual(gotData, tt.wantData) {
 				t.Errorf("StructToMap() = %v, want %v", gotData, tt.wantData)
 			}

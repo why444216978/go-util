@@ -19,6 +19,7 @@ func init() {
 }
 
 // DeepCopy 深拷贝转换
+//
 //	 type User struct {
 //		 A string
 //	 }
@@ -66,30 +67,22 @@ func ReaderToStruct(reader io.Reader, val interface{}) error {
 	return json.NewDecoder(reader).Decode(val)
 }
 
-// StructToMap struct转map
-func StructToMap(obj interface{}) (data map[string]interface{}, err error) {
-	data = make(map[string]interface{})
-
-	if obj == nil {
-		err = errors.New("obj is nil")
-		return
+func StructToMap(data any) map[string]any {
+	kv := map[string]any{}
+	if data == nil {
+		return kv
 	}
 
-	obj1 := reflect.TypeOf(obj)
-	if obj1.Kind() != reflect.Struct {
-		err = errors.New("type not Struct")
-		return
+	dataVal := reflect.Indirect(reflect.ValueOf(data))
+	if dataVal.Kind() != reflect.Struct {
+		return kv
 	}
-	obj2 := reflect.ValueOf(obj)
+	typ := dataVal.Type()
+	for i := 0; i < typ.NumField(); i++ {
+		kv[typ.Field(i).Tag.Get("json")] = dataVal.Field(i).Interface()
+	}
 
-	for i := 0; i < obj1.NumField(); i++ {
-		k := obj1.Field(i).Tag.Get("json")
-		if k == "" {
-			k = obj1.Field(i).Name
-		}
-		data[k] = obj2.Field(i).Interface()
-	}
-	return
+	return kv
 }
 
 // StructToJson 结构体转json
