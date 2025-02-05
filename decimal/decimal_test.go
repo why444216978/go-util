@@ -27,10 +27,33 @@ func TestTransferDecimal(t *testing.T) {
 	assert.Equal(t, 152668.10, res)
 }
 
+func TestDivFloorFloat64(t *testing.T) {
+	res := DivFloorFloat64(1234, 2)
+	assert.Equal(t, float64(1234), res)
+
+	res = DivFloorFloat64(1234.5, 2)
+	assert.Equal(t, 1234.5, res)
+
+	res = DivFloorFloat64(1234.5, 2)
+	assert.Equal(t, 1234.5, res)
+
+	res = DivFloorFloat64(1234.5678, 2)
+	assert.Equal(t, 1234.56, res)
+}
+
+func TestDivFloorString(t *testing.T) {
+	r := DivFloorString(1234.5, 2)
+	assert.Equal(t, "1234.50", r)
+
+	r = DivFloorString(1234, 2)
+	assert.Equal(t, "1234.00", r)
+}
+
 func TestValueFormat(t *testing.T) {
 	convey.Convey("TestValueFormat", t, func() {
 		convey.Convey("< 1000", func() {
-			assert.Equal(t, "888", ValueFormat(888))
+			assert.Equal(t, "888.00", ValueFormat(888))
+			assert.Equal(t, "888.12", ValueFormat(888.123456789))
 		})
 		convey.Convey("< 1000000", func() {
 			assert.Equal(t, "888.88K", ValueFormat(888888))
