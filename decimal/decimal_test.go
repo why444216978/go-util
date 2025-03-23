@@ -22,45 +22,45 @@ func TestFormatPrice(t *testing.T) {
 	assert.Equal(t, "10.0₇1234", r)
 }
 
-func TestTransferDecimal(t *testing.T) {
-	res := TransferDecimal(float64(88), 1)
+func TestTransferDecimalFloat64(t *testing.T) {
+	res := TransferDecimalFloat64(float64(88), 1)
 	assert.Equal(t, 8.8, res)
 
-	res = TransferDecimal(float64(88), 2)
+	res = TransferDecimalFloat64(float64(88), 2)
 	assert.Equal(t, 0.88, res)
 
-	res = TransferDecimal(float64(88), 3)
+	res = TransferDecimalFloat64(float64(88), 3)
 	assert.Equal(t, 0.08, res)
 
-	res = TransferDecimal(float64(6950), 3)
+	res = TransferDecimalFloat64(float64(6950), 3)
 	assert.Equal(t, 6.95, res)
 
-	res = TransferDecimal(float64(12345), 3)
+	res = TransferDecimalFloat64(float64(12345), 3)
 	assert.Equal(t, 12.34, res)
 
-	res = TransferDecimal(float64(152668107691), 6)
+	res = TransferDecimalFloat64(float64(152668107691), 6)
 	assert.Equal(t, 152668.10, res)
 }
 
-func TestDivFloorFloat64(t *testing.T) {
-	res := DivFloorFloat64(1234, 2)
+func TestFormatFloorFloat64(t *testing.T) {
+	res := FormatFloorFloat64(1234, 2)
 	assert.Equal(t, float64(1234), res)
 
-	res = DivFloorFloat64(1234.5, 2)
+	res = FormatFloorFloat64(1234.5, 2)
 	assert.Equal(t, 1234.5, res)
 
-	res = DivFloorFloat64(1234.5, 2)
+	res = FormatFloorFloat64(1234.5, 2)
 	assert.Equal(t, 1234.5, res)
 
-	res = DivFloorFloat64(1234.5678, 2)
+	res = FormatFloorFloat64(1234.5678, 2)
 	assert.Equal(t, 1234.56, res)
 }
 
-func TestDivFloorString(t *testing.T) {
-	r := DivFloorString(1234.5, 2)
+func TestFormatFloorString(t *testing.T) {
+	r := FormatFloorString(1234.5, 2)
 	assert.Equal(t, "1234.50", r)
 
-	r = DivFloorString(1234, 2)
+	r = FormatFloorString(1234, 2)
 	assert.Equal(t, "1234.00", r)
 }
 
@@ -105,33 +105,59 @@ func TestFormatVolume(t *testing.T) {
 		convey.Convey("< 0.01", func() {
 			assert.Equal(t, "< $0.01", FormatVolume(0.001))
 		})
+		convey.Convey("v < 10", func() {
+			assert.Equal(t, "$8.88", FormatVolume(8.888))
+		})
+		convey.Convey("v >= 10 && v < 1000", func() {
+			assert.Equal(t, "$18.8", FormatVolume(18.888))
+		})
 		convey.Convey("KMB", func() {
-			assert.Equal(t, "$1.11K", FormatVolume(1111.11))
+			assert.Equal(t, "$1.1K", FormatVolume(1111.11))
+		})
+	})
+}
+
+func TestFormatAmount(t *testing.T) {
+	convey.Convey("TestFormatAmount", t, func() {
+		convey.Convey("<0.01", func() {
+			assert.Equal(t, "< 0.01", FormatAmount(0.001))
+		})
+		convey.Convey("==0", func() {
+			assert.Equal(t, "0.00", FormatAmount(0))
+		})
+		convey.Convey("<10", func() {
+			assert.Equal(t, "8.88", FormatAmount(8.888))
+		})
+		convey.Convey("v > 10 && v < 1000 ", func() {
+			assert.Equal(t, "18.8", FormatAmount(18.888))
+		})
+		convey.Convey("KMB", func() {
+			assert.Equal(t, "1.1K", FormatAmount(1111.11))
 		})
 	})
 }
 
 func TestFormatPercent(t *testing.T) {
 	r := FormatPercent(-0.888, false)
-	assert.Equal(t, "-0.88%", r)
+	assert.Equal(t, "-88.80%", r)
 
-	r = FormatPercent(0.001, false)
+	r = FormatPercent(0.00001, false)
 	assert.Equal(t, "< 0.01%", r)
-	r = FormatPercent(0.001, true)
+	r = FormatPercent(0.00001, true)
 	assert.Equal(t, "< +0.01%", r)
 
-	r = FormatPercent(0.888, false)
+	r = FormatPercent(0.00888, false)
 	assert.Equal(t, "0.88%", r)
-	r = FormatPercent(0.888, true)
+	r = FormatPercent(0.00888, true)
 	assert.Equal(t, "+0.88%", r)
 
-	r = FormatPercent(10.888, false)
+	r = FormatPercent(0.10888, false)
 	assert.Equal(t, "10.8%", r)
-	r = FormatPercent(10.888, true)
+	r = FormatPercent(0.10888, true)
 	assert.Equal(t, "+10.8%", r)
 
-	r = FormatPercent(1111.111, false)
+	r = FormatPercent(11.11111, false)
 	assert.Equal(t, "1.1K%", r)
-	r = FormatPercent(1111.111, true)
+	r = FormatPercent(11.11111, true)
 	assert.Equal(t, "+1.1K%", r)
 }
