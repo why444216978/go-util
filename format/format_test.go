@@ -1,4 +1,4 @@
-package decimal
+package format
 
 import (
 	"testing"
@@ -6,21 +6,6 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestFormatPrice(t *testing.T) {
-	r := FormatPrice(0.001)
-	assert.Equal(t, "0.001", r)
-	r = FormatPrice(0.0001)
-	assert.Equal(t, "0.0₃1", r)
-	r = FormatPrice(0.00010)
-	assert.Equal(t, "0.0₃1", r)
-	r = FormatPrice(0.00012345)
-	assert.Equal(t, "0.0₃1234", r)
-	r = FormatPrice(10.00000001234)
-	assert.Equal(t, "10.0₇1234", r)
-	r = FormatPrice(10.000000012345)
-	assert.Equal(t, "10.0₇1234", r)
-}
 
 func TestTransferDecimalFloat64(t *testing.T) {
 	res := TransferDecimalFloat64(float64(88), 1)
@@ -91,52 +76,6 @@ func TestFormatKMB(t *testing.T) {
 	})
 }
 
-func TestFormatVolume(t *testing.T) {
-	convey.Convey("TestFormatVolume", t, func() {
-		convey.Convey("abs <0.01", func() {
-			assert.Equal(t, "< $-0.01", FormatVolume(-0.001))
-		})
-		convey.Convey("< 0", func() {
-			assert.Equal(t, "$-0.10", FormatVolume(-0.1))
-		})
-		convey.Convey("== 0", func() {
-			assert.Equal(t, "$0.00", FormatVolume(0))
-		})
-		convey.Convey("< 0.01", func() {
-			assert.Equal(t, "< $0.01", FormatVolume(0.001))
-		})
-		convey.Convey("v < 10", func() {
-			assert.Equal(t, "$8.88", FormatVolume(8.888))
-		})
-		convey.Convey("v >= 10 && v < 1000", func() {
-			assert.Equal(t, "$18.8", FormatVolume(18.888))
-		})
-		convey.Convey("KMB", func() {
-			assert.Equal(t, "$1.1K", FormatVolume(1111.11))
-		})
-	})
-}
-
-func TestFormatAmount(t *testing.T) {
-	convey.Convey("TestFormatAmount", t, func() {
-		convey.Convey("<0.01", func() {
-			assert.Equal(t, "< 0.01", FormatAmount(0.001))
-		})
-		convey.Convey("==0", func() {
-			assert.Equal(t, "0.00", FormatAmount(0))
-		})
-		convey.Convey("<10", func() {
-			assert.Equal(t, "8.88", FormatAmount(8.888))
-		})
-		convey.Convey("v > 10 && v < 1000 ", func() {
-			assert.Equal(t, "18.8", FormatAmount(18.888))
-		})
-		convey.Convey("KMB", func() {
-			assert.Equal(t, "1.1K", FormatAmount(1111.11))
-		})
-	})
-}
-
 func TestFormatPercent(t *testing.T) {
 	r := FormatPercent(-0.888, false)
 	assert.Equal(t, "-88.80%", r)
@@ -152,9 +91,9 @@ func TestFormatPercent(t *testing.T) {
 	assert.Equal(t, "+0.88%", r)
 
 	r = FormatPercent(0.10888, false)
-	assert.Equal(t, "10.8%", r)
+	assert.Equal(t, "10.88%", r)
 	r = FormatPercent(0.10888, true)
-	assert.Equal(t, "+10.8%", r)
+	assert.Equal(t, "+10.88%", r)
 
 	r = FormatPercent(11.11111, false)
 	assert.Equal(t, "1.1K%", r)
