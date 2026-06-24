@@ -1,6 +1,6 @@
 module github.com/why444216978/go-util
 
-go 1.19
+go 1.23
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
@@ -23,9 +23,11 @@ require (
 require (
 	github.com/alexmullins/zip v0.0.0-20180717182244-4affb64b04d0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/crawlab-team/bm25 v0.0.0-20250328025100-5014dda86138 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/go-ego/gse v1.0.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
@@ -48,6 +50,7 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/spf13/cast v1.7.0 // indirect
+	github.com/vcaesar/cedar v0.30.0 // indirect
 	github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53 // indirect
 	github.com/xuri/excelize/v2 v2.8.1 // indirect
 	github.com/xuri/nfp v0.0.0-20230919160717-d98342af3f05 // indirect
